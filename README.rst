@@ -1,18 +1,55 @@
-=====
-Usage
-=====
+==============
+avro-to-python
+==============
 
-To use avro-to-python in a project, place your avro avsc files in a target directory. They must be VALID Avro avsc files.
+avro-to-python is a light tool for compiling avro schema files (.avsc) to python classes making using avro schemata easy.
 
-Things to Note
-^^^^^^^^^^^^^^
 
-- avro-to-python compiled classes Enforce data types as defined in avro schemas
-- Enum types use the python Enum Library
-- Compiled python classes should are vanilla python and require no external packages
+* Free software: MIT license
+* Documentation: https://avro-to-python.readthedocs.io.
+
+Installation
+^^^^^^^^^^^^
+
+Pip install (recommended)
+-----------
+To install avro-to-python, run this command in your terminal:
+
+.. code-block:: console
+
+    $ pip install avro-to-python
+
+Install From Source ()
+-----------
+
+The sources for avro-to-python can be downloaded from the `Github repo`_.
+
+Clone the public repository:
+
+.. code-block:: console
+
+    $ git clone git://github.com/srserves85/avro-to-python
+
+Once you have a copy of the source, you can install it with:
+
+.. code-block:: console
+
+    $ python setup.py install
+..
+or
+.. code-block:: console
+
+    $ pip install -e .
+..
+
+
+Examples
+^^^^^^^^
+
+Majority of the use of avro-to-python is assumed to be used as a cli, but you can still import and use the python classes under the hood as well.
 
 CLI (without --pip)
-^^^^^^^^^^^^^^^^^
+-------------------
 To use the cli, here is the available cli commands:
 
 .. code-block:: bash
@@ -44,7 +81,7 @@ If you run the above on a valid avro avsc file, you should then be able to impor
 
 
 CLI (with --pip)
-^^^^^^^^^^^^^^^^^
+----------------
 You can also choose to make compiled avro packages ***pip installable*** by adding the "--pip" flags. An example of this is the following:
 .. highlight::
     avro-to-python [path_to_source_avsc_files] [path_to_target_directory] --pip test_avro
@@ -64,8 +101,8 @@ Now that you have the package installed, you can import it by it's package name 
     record = RecordClass({'foo': True, 'bar': 'true', 'baz': 10, 'food': 'CHOCOLATE'})
 
 
-Using avro-to-python in a Script
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+avro-to-python in a Script
+--------------------------
 You can also use the reader and writer packages in avro-to-python as you would any other python package. Avro to python is split between a *reader* and *writer* classes. avro-to-python treates namespaces as acyclic trees and uses depth first search to ensure no duplication or namespace collisions on read and write. An example useage is below:
 
 .. code-block:: python
@@ -84,3 +121,37 @@ You can also use the reader and writer packages in avro-to-python as you would a
 
     # compile python files using 'tests/test_records as the namespace root'
     writer.write(root_dir='tests/test_records')
+
+
+
+Roadmap
+^^^^^^^
+
+Reader
+- [X] Create Namespace Trees on nested namespaces
+- [X] Read Record and Enum File
+- [X] Primitive types
+- [X] Array Types
+- [X] Union types
+- [X] References to other files
+- [ ] Logical Types (Currently just converts to primitive types)
+
+Writer
+- [X] Base Schema Writer
+- [X] Base Record Schema
+- [X] Base Enum Schema
+- [X] Primitive Types Schema
+- [X] Array Types Schema
+- [X] Union Types Schema
+- [ ] Logical Types Schema (Currently just converts to primitive types)
+- [X] Add configs to pip install package
+
+CLI
+- [X] Wrap Writer and Reader into one cli commant
+- [X] Add pip install option (would include all files to pip install compiled package)
+- [ ] Add better --help documentation
+
+#### Documentation
+- [ ] Document reader class
+- [ ] Document writer class
+- [ ] Document cli
