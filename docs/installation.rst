@@ -12,7 +12,7 @@ To install avro-to-python, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install avro_to_python
+    $ pip install avro-to-python
 
 This is the preferred method to install avro-to-python, as it will always install the most recent stable release.
 
@@ -32,20 +32,26 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/srserves85/avro_to_python
+    $ git clone git://github.com/srserves85/avro-to-python
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl -OJL https://github.com/srserves85/avro_to_python/tarball/master
+    $ curl -OJL https://github.com/srserves85/avro-to-python/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
 .. code-block:: console
 
     $ python setup.py install
+..
+or
+.. code-block:: console
+
+    $ pip install -e .
+..
 
 
-.. _Github repo: https://github.com/srserves85/avro_to_python
-.. _tarball: https://github.com/srserves85/avro_to_python/tarball/master
+.. _Github repo: https://github.com/srserves85/avro-to-python
+.. _tarball: https://github.com/srserves85/avro-to-python/tarball/master
