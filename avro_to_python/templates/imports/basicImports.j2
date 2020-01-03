@@ -1,0 +1,11 @@
+{%- block basicimports %}
+import json
+{%- if file.type == 'record' %}
+from {{pip_import}}helpers import default_json_serialize, todict
+from typing import Union
+{%- endif -%}
+{%- if file.type == 'enum' %}
+from enum import Enum
+from {{pip_import}}helpers import default_json_serialize, DefaultEnumMeta, todict
+{%- endif -%}
+{% endblock %}

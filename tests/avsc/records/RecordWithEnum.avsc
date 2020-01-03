@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "RecordWithEnum",
+  "namespace" : "records",
+  "fields" : [ {
+    "name" : "favoriteFlavor",
+    "type" : {
+      "type" : "enum",
+      "name" : "Flavor",
+      "namespace" : "records.nested",
+      "symbols" : [ "VANILLA", "CHOCOLATE", "STRAWBERRY" ]
+    }
+  } ]
+}

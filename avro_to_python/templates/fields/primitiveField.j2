@@ -1,0 +1,12 @@
+{%- block primitive %}
+    def set_{{name}}(self, value: {{primitive_type_map[field.type]}}) -> None:
+
+        if isinstance(value, {{primitive_type_map[field.type]}}):
+            self.{{name}} = value
+        else:
+            raise TypeError("field '{{name}}' should be type {{primitive_type_map[field.type]}}")
+
+    def get_{{name}}(self) -> {{primitive_type_map[field.type]}}:
+
+        return self.{{name}}
+{%- endblock -%}

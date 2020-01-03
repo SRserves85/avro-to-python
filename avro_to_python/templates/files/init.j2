@@ -1,0 +1,4 @@
+""" init file for file imports at namespace level """
+{%- for file in imports %}
+from {{pip_import}}{{file}} import {{file.split('.')[-1]}}
+{% endfor %}

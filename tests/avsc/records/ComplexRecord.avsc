@@ -1,0 +1,24 @@
+{
+  "type" : "record",
+  "name" : "ComplexRecord",
+  "namespace" : "records",
+  "fields" : [ {
+    "name" : "thing",
+    "type" : {
+      "type" : "record",
+      "name" : "Thing",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "int"
+      } ]
+    }
+  }, {
+    "name" : "flavor",
+    "type" : {
+      "type" : "enum",
+      "name" : "Flavor",
+      "namespace" : "records.nested",
+      "symbols" : [ "VANILLA", "CHOCOLATE", "STRAWBERRY" ]
+    }
+  } ]
+}

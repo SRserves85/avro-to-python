@@ -1,0 +1,7 @@
+{% block fileimports %}
+{%- if file.imports %}
+{%- for imp in file.imports -%}
+from {{pip_import}}{{imp.namespace}}.{{imp.name}} import {{imp.name}}
+{% endfor -%}
+{%- endif -%}
+{% endblock %}

@@ -1,0 +1,23 @@
+{%- block array %}
+    def set_{{name}}(self, values: list) -> None:
+
+        self.{{name}} = []
+        if isinstance(values, list):
+            for element in values:
+                {#- handle tons of types which sucks... -#}
+                {%- if field['items']['avro_type'] == 'reference' %}
+                self.{{name}}.append({{field['items']['name']}}(element))
+                {%- elif field['items']['avro_type'] == 'primitive'%}
+                if isinstance(element, {{primitive_type_map[field['items']['type']]}}):
+                    self.{{name}}.append(element)
+                else:
+                    raise TypeError(
+                        "Type for '{{name}}' should be '{{primitive_type_map[field['items']['type']]}}'"
+                    )
+                {%- endif %}
+        else:
+            raise TypeError("Field '{{name}}' should be type list")
+
+    def get_{{name}}(self) -> list:
+        return self.{{name}}
+{%- endblock -%}

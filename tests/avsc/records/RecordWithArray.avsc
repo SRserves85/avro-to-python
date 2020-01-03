@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "RecordWithArray",
+  "namespace" : "records",
+  "fields" : [ {
+    "name" : "things",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "Thing",
+        "fields" : [ {
+          "name" : "id",
+          "type" : "int"
+        } ]
+      }
+    }
+  }, {
+    "name" : "numbers",
+    "type" : {
+      "type" : "array",
+      "items" : "int"
+    }
+  } ]
+}

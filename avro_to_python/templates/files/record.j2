@@ -1,0 +1,25 @@
+{%- block record -%}
+class {{file.name}}(object):
+
+    {% include 'partials/avroSchema.j2'|indent(-4) %}
+    def __init__(self, obj: Union[str, dict, '{{file.name}}']) -> None:
+        if isinstance(obj, str):
+            obj = json.loads(obj)
+
+        elif isinstance(obj, type(self)):
+            obj = obj.__dict__
+
+        elif not isinstance(obj, dict):
+            raise TypeError(
+                f"{type(obj)} is not in ('str', 'dict', '{{file.name}}')"
+            )
+{% for name, field in file.fields.items() %}
+        self.set_{{name}}(obj.get('{{name}}', {{field.get('default', None)}}))
+{% endfor %}
+    def dict(self):
+        return todict(self)
+{# add setter functions for attributes -#}
+{% for name, field in file.fields.items() -%}
+{% include 'fields/fieldFactory.j2' %}
+{% endfor -%}
+{%- endblock -%}

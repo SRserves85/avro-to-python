@@ -1,0 +1,6 @@
+{
+  "type" : "enum",
+  "name" : "Flavor",
+  "namespace" : "records.nested",
+  "symbols" : [ "VANILLA", "CHOCOLATE", "STRAWBERRY" ]
+}

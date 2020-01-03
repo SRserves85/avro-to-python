@@ -1,0 +1,31 @@
+{%- block union %}
+    def set_{{name}}(self, value: Union[{{', '.join(get_union_types(field).split(','))}}]) -> None:
+{%- set union_type_0 = get_union_types(field).split(',')[0] -%}
+{%- if union_type_0 == 'None' %}
+        if isinstance(value, type({{union_type_0}})):
+            self.{{name}} = None
+{%- elif (union_type_0 in primitive_type_map.values()) %}
+        if isinstance(value, {{union_type_0}}):
+            self.{{name}} = {{union_type_0}}(value)
+{%- elif ((union_type_0 not in primitive_type_map.values()) and (union_type_0 != 'Array')) %}
+        if isinstance(value, (dict, {{union_type_0}})):
+            self.{{name}} = {{union_type_0}}(value)
+{%- endif %}
+{% for typ in get_union_types(field).split(',')[1:] %}
+{%- if typ == 'None' %}
+        elif isinstance(value, type({{typ}})):
+            self.{{name}} = None
+{%- elif (typ in primitive_type_map.values()) %}
+        elif isinstance(value, {{typ}}):
+            self.{{name}} = {{typ}}(value)
+{%- elif ((typ not in primitive_type_map.values()) and (typ != 'Array')) %}
+        elif isinstance(value, (dict, {{typ}})):
+            self.{{name}} = {{typ}}(value)
+{%- endif %}
+{% endfor %}
+        else:
+            raise TypeError("field '{{name}}' should be in ({{', '.join(get_union_types(field).split(','))}})")
+
+    def get_{{name}}(self) -> Union[{{', '.join(get_union_types(field).split(','))}}]:
+        return self.{{name}}
+{%- endblock -%}

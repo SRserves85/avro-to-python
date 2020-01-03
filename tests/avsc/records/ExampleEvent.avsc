@@ -1,0 +1,17 @@
+{
+  "type" : "record",
+  "name" : "ExampleEvent",
+  "namespace" : "records",
+  "doc" : "This is an example schema.",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string"
+  }, {
+    "name" : "active",
+    "type" : "boolean",
+    "default" : true
+  }, {
+    "name" : "salary",
+    "type" : "long"
+  } ]
+}

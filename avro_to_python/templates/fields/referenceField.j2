@@ -1,0 +1,9 @@
+{%- block reference %}
+    def set_{{name}}(self, values: {{field.name}}) -> None:
+
+        self.{{name}} = {{field.name}}(values)
+
+    def get_{{name}}(self) -> {{field.name}}:
+
+        return self.{{name}}
+{%- endblock -%}
