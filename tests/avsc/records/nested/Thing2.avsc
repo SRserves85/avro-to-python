@@ -1,0 +1,9 @@
+{
+  "type" : "record",
+  "name" : "Thing2",
+  "namespace" : "records.nested",
+  "fields" : [ {
+    "name" : "chars",
+    "type" : "string"
+  } ]
+}

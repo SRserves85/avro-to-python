@@ -1,0 +1,10 @@
+{
+  "type" : "record",
+  "name" : "Thing3",
+  "namespace" : "records.nested",
+  "fields" : [ {
+    "name" : "chars",
+    "type" : "string",
+    "default": "string default"
+  } ]
+}

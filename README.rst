@@ -12,7 +12,7 @@ Installation
 ^^^^^^^^^^^^
 
 Pip install (recommended)
------------
+-------------------------
 To install avro-to-python, run this command in your terminal:
 
 .. code-block:: console
@@ -20,9 +20,9 @@ To install avro-to-python, run this command in your terminal:
     $ pip install avro-to-python
 
 Install From Source ()
------------
+----------------------
 
-The sources for avro-to-python can be downloaded from the `Github repo`_.
+The sources for avro-to-python can be downloaded source as well.
 
 Clone the public repository:
 
@@ -30,17 +30,19 @@ Clone the public repository:
 
     $ git clone git://github.com/srserves85/avro-to-python
 
+
 Once you have a copy of the source, you can install it with:
+
 
 .. code-block:: console
 
     $ python setup.py install
-..
+
 or
+
 .. code-block:: console
 
     $ pip install -e .
-..
 
 
 Examples
@@ -83,7 +85,8 @@ If you run the above on a valid avro avsc file, you should then be able to impor
 CLI (with --pip)
 ----------------
 You can also choose to make compiled avro packages ***pip installable*** by adding the "--pip" flags. An example of this is the following:
-.. highlight::
+.. code-block:: bash
+
     avro-to-python [path_to_source_avsc_files] [path_to_target_directory] --pip test_avro
 
 By running this, you should be able to pip install the above package you created from the target directory you specified by running:
@@ -128,6 +131,7 @@ Roadmap
 ^^^^^^^
 
 Reader
+
 - [X] Create Namespace Trees on nested namespaces
 - [X] Read Record and Enum File
 - [X] Primitive types
@@ -137,6 +141,7 @@ Reader
 - [ ] Logical Types (Currently just converts to primitive types)
 
 Writer
+
 - [X] Base Schema Writer
 - [X] Base Record Schema
 - [X] Base Enum Schema
@@ -147,11 +152,13 @@ Writer
 - [X] Add configs to pip install package
 
 CLI
-- [X] Wrap Writer and Reader into one cli commant
+
+- [X] Wrap Writer and Reader into one cli commmit
 - [X] Add pip install option (would include all files to pip install compiled package)
 - [ ] Add better --help documentation
 
-#### Documentation
+Documentation
+
 - [ ] Document reader class
 - [ ] Document writer class
 - [ ] Document cli

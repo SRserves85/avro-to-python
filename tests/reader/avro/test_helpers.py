@@ -2,7 +2,7 @@
 
 import unittest
 from avro_to_python.utils.avro.helpers import (
-    _create_reference, _get_namespace
+    _create_reference, _get_namespace, dedupe_imports
 )
 from avro_to_python.utils.exceptions import BadReferenceError
 
@@ -88,4 +88,24 @@ class AvroHelperTests(unittest.TestCase):
             empty_expected,
             empty,
             'an object with no namespace or parent_namespace should return an empty string'  # NOQA
+        )
+
+    def test_dedupe_imports(self):
+        """ tests the dedupe_imports helper function works """
+
+        expected = [
+            {'name': 'Test', 'namespace': 'test.namespace'},
+            {'name': 'Test2', 'namespace': 'test2.namespace'}
+        ]
+
+        has_dupes = [
+            {'name': 'Test', 'namespace': 'test.namespace'},
+            {'name': 'Test', 'namespace': 'test.namespace'},
+            {'name': 'Test2', 'namespace': 'test2.namespace'},
+            {'name': 'Test2', 'namespace': 'test2.namespace'}
+        ]
+
+        self.assertEqual(
+            expected,
+            dedupe_imports(has_dupes)
         )

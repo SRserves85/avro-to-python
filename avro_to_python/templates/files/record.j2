@@ -14,7 +14,7 @@ class {{file.name}}(object):
                 f"{type(obj)} is not in ('str', 'dict', '{{file.name}}')"
             )
 {% for name, field in file.fields.items() %}
-        self.set_{{name}}(obj.get('{{name}}', {{field.get('default', None)}}))
+        {% include 'partials/objectSetter.j2' %}
 {% endfor %}
     def dict(self):
         return todict(self)

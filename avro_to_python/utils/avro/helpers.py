@@ -1,5 +1,7 @@
 """ contains helper function for parsing avro schema """
 
+from typing import List
+
 from avro_to_python.utils.exceptions import BadReferenceError
 from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPE_MAP
 
@@ -96,3 +98,22 @@ def get_union_types(
             raise ValueError('unsupported type')
 
     return ','.join(out_types)
+
+
+def dedupe_imports(imports: List[dict]) -> None:
+    """ Dedupes list of imports
+
+    Parameters
+    ----------
+        imports: list of dict
+            list of imports of a file
+
+    Returns
+    -------
+        None
+    """
+    hashmap = dict()
+    for i, obj in enumerate(imports):
+        hashmap[obj['name'] + obj['namespace']] = obj
+
+    return list(hashmap.values())

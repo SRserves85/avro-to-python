@@ -36,17 +36,17 @@ class CliTests(unittest.TestCase):
     def test_pip_command_line(self):
         """ tests that the cli can make a non-pip run """
         runner = CliRunner()
-        args = [self.source, './', '--pip', 'test_avro']
+        args = [self.source, './', '--pip', 'test-avro']
         result = runner.invoke(cli.main, args)
         assert result.exit_code == 0
 
         # Install the package using -e for local
         subprocess.check_call(
-            [sys.executable, '-m', 'pip', 'install', '-e', './test_avro']
+            [sys.executable, '-m', 'pip', 'install', '-e', './test-avro']
         )
 
         # when pip installing, it isn't actually added to $PATH
-        sys.path.append('test_avro/')
+        sys.path.append('test-avro/')
 
         # import a namespace
         from test_avro.records import RecordWithRecord

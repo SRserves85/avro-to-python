@@ -11,7 +11,8 @@ from avro_to_python.utils.paths import (
 )
 
 
-TEMPLATE_PATH = get_system_path('avro_to_python/templates')
+TEMPLATE_PATH = __file__.replace('writer/writer.py', 'templates/')
+TEMPLATE_PATH = get_system_path(TEMPLATE_PATH)
 
 
 class AvroWriter(object):
@@ -94,9 +95,10 @@ class AvroWriter(object):
 
         self.root_dir = get_system_path(root_dir)
         if self.pip:
-            self.pip_import = self.pip + '.'
+            self.pip_import = self.pip.replace('-', '_') + '.'
             self.pip_dir = self.root_dir + '/' + self.pip
-            self.root_dir += '/' + self.pip + '/' + self.pip
+            self.root_dir += '/' + self.pip + '/' + self.pip.replace('-', '_')
+            self.pip = self.pip.replace('-', '_')
         else:
             self.pip_import = ''
         get_or_create_path(self.root_dir)
@@ -235,7 +237,7 @@ class AvroWriter(object):
         # add non-visited children to stack
         for name in node['children']:
             if not node['children'][name]['visited']:
-                namespace = namespace + '.' + name
                 self._dfs(
-                    node['children'][name], namespace
+                    node=node['children'][name],
+                    namespace=namespace + '.' + name
                 )

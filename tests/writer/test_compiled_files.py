@@ -228,3 +228,34 @@ class PathTests(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             RecordWithUnion(data4)
+
+    def test_nested_things(self):
+        """ tests that nested things have correct mappings and namespaces """
+
+        from records.nested import Thing2, Thing3
+
+        data1 = {'chars': 'this is a string'}
+        data2 = {}
+        data3 = {'chars': 10}
+
+        record1 = Thing2(data1)
+        record2 = Thing3(data2)
+
+        with self.assertRaises(TypeError):
+            Thing2(data2)
+
+        with self.assertRaises(TypeError):
+            Thing3(data3)
+
+        with self.assertRaises(TypeError):
+            Thing2(data2)
+
+        self.assertEqual(
+            record1.dict(),
+            data1
+        )
+
+        self.assertEqual(
+            record2.chars,
+            'string default'
+        )

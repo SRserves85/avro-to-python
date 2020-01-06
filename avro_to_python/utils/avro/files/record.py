@@ -2,6 +2,8 @@
 
 from typing import List
 
+from avro_to_python.utils.avro.helpers import dedupe_imports
+
 from avro_to_python.utils.avro.types.array import _array_field
 from avro_to_python.utils.avro.types.enum import _enum_field
 from avro_to_python.utils.avro.types.record import _record_field
@@ -86,3 +88,5 @@ def _record_file(file: dict, item: dict, queue: List[dict]) -> None:
 
         file['fields'][field['name']] = field_object
         file['imports'] += references
+
+    file['imports'] = dedupe_imports(file['imports'])
