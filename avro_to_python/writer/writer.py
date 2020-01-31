@@ -4,6 +4,7 @@ import json
 
 from jinja2 import Environment, FileSystemLoader
 
+from avro_to_python.classes.node import Node
 from avro_to_python.utils.avro.helpers import get_union_types
 from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPE_MAP
 from avro_to_python.utils.paths import (
@@ -192,7 +193,7 @@ class AvroWriter(object):
         )
         return filetext
 
-    def _dfs(self, node: dict=None, namespace: str='') -> None:
+    def _dfs(self, node: Node=None, namespace: str='') -> None:
         """ yields files from tree via DFS
 
         Parameters
@@ -213,11 +214,10 @@ class AvroWriter(object):
         if not node:
             node = self.tree
 
-        node['visited'] = True
+        node.visited = True
 
         imports = set()
-        for filename, file in node['files'].items():
-
+        for filename, file in node.files.items():
             filetext = self._render_file(file=file)
             self._write_file(
                 filename=filename,
@@ -225,7 +225,7 @@ class AvroWriter(object):
                 namespace=namespace
             )
             imports.add(
-                file['namespace'] + '.' + file['name']
+                file.namespace + '.' + file.name
             )
 
         # add __init__ files for correct imports
@@ -235,9 +235,9 @@ class AvroWriter(object):
             )
 
         # add non-visited children to stack
-        for name in node['children']:
-            if not node['children'][name]['visited']:
+        for name in node.children:
+            if not node.children[name].visited:
                 self._dfs(
-                    node=node['children'][name],
+                    node=node.children[name],
                     namespace=namespace + '.' + name
                 )

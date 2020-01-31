@@ -21,7 +21,7 @@ class CliTests(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree('records', ignore_errors=True)
-        shutil.rmtree('test_avro', ignore_errors=True)
+        shutil.rmtree('test-avro', ignore_errors=True)
 
     def test_command_line_interface(self):
         """Test the CLI."""
@@ -46,7 +46,7 @@ class CliTests(unittest.TestCase):
         )
 
         # when pip installing, it isn't actually added to $PATH
-        sys.path.append('test-avro/')
+        sys.path.append('test-avro')
 
         # import a namespace
         from test_avro.records import RecordWithRecord
@@ -60,23 +60,6 @@ class CliTests(unittest.TestCase):
         )
 
         subprocess.check_call(
-            [sys.executable, '-m', 'pip', 'uninstall', '-y', 'test_avro']
+            [sys.executable, '-m', 'pip', 'uninstall', '-y', 'test-avro']
         )
-
-    def test_no_pip_command_line(self):
-        """ tests that the cli can make a non-pip run """
-        runner = CliRunner()
-        args = [self.source, './']
-        result = runner.invoke(cli.main, args)
-        assert result.exit_code == 0
-
-        # import a namespace
-        from records import RecordWithRecord
-
-        data1 = {'thing1': {'id': 10}, 'thing2': {'id': 0}}
-        record1 = RecordWithRecord(data1)
-
-        self.assertEqual(
-            json.dumps(data1),
-            record1.serialize()
-        )
+        del runner

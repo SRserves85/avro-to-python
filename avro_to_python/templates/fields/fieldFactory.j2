@@ -1,11 +1,11 @@
 {% block field_factory %}
-{%- if field.avro_type == 'reference' -%}
+{%- if field.fieldtype == 'reference' -%}
 {%- include 'fields/referenceField.j2' -%}
-{%- elif field.avro_type == 'primitive' -%}
+{%- elif field.fieldtype == 'primitive' -%}
 {%- include 'fields/primitiveField.j2' -%}
-{%- elif field.avro_type == 'array' -%}
+{%- elif field.fieldtype == 'array' -%}
 {%- include 'fields/arrayField.j2' -%}
-{%- elif field.avro_type == 'union' -%}
+{%- elif field.fieldtype == 'union' -%}
 {%- include 'fields/unionField.j2' -%}
 {% endif -%}
 {% endblock %}

@@ -1,7 +1,7 @@
 {%- block object_setter %}
-{%- if field.get('default') is string -%}
-        self.set_{{name}}(obj.get('{{name}}', '{{field.get('default', None)}}'))
+{%- if field.default is string -%}
+        self.set_{{name}}(obj.get('{{name}}', '{{field.default}}'))
 {%- else -%}
-        self.set_{{name}}(obj.get('{{name}}', {{field.get('default', None)}}))
+        self.set_{{name}}(obj.get('{{name}}', {{field.default}}))
 {%- endif -%}
 {% endblock -%}

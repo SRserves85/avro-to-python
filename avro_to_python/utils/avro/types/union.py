@@ -1,6 +1,8 @@
 """ helper function to handle union field type """
+
 from typing import Tuple
 
+from avro_to_python.classes.field import Field
 
 from avro_to_python.utils.avro.types.type_factory import _get_field_type
 from avro_to_python.utils.avro.types.primitive import _primitive_type
@@ -12,7 +14,7 @@ from avro_to_python.utils.avro.types.record import _record_field
 def _union_field(field: dict,
                  parent_namespace: str=None,
                  queue: list=None,
-                 references: list=None) -> Tuple[dict, list]:
+                 references: list=[]) -> Tuple[dict, list]:
     """ helper function for adding information to union fields
 
     If union contains references to embedded enum or record,
@@ -36,12 +38,17 @@ def _union_field(field: dict,
 
         references: potential imports object if a file is generated
     """
-
-    field_object = {
-        'avro_type': 'union',
-        'types': []
+    # python is annoying with mutability of this dict
+    kwargs = {
+        'name': field['name'],
+        'fieldtype': 'union',
+        'avrotype': None,
+        'default': field.get('default', None),
+        'reference_name': None,
+        'reference_namespace': None,
+        'array_item_type': None,
+        'union_types': []
     }
-    references = []
 
     # iterate through possibly types
     for typ in field['type']:
@@ -52,37 +59,40 @@ def _union_field(field: dict,
 
         # primitive types
         if field_type == 'primitive':
-            field_object['types'].append(_primitive_type(typ))
+            kwargs['union_types'].append(_primitive_type({
+                'name': 'uniontype',
+                'type': typ
+            }))
 
         # nested complex record
         elif field_type == 'record':
-            file_obj, file_references = _record_field(
-                field=typ,
+            kwargs['union_types'].append(_record_field(
+                field={'name': 'uniontype', 'type': typ},
                 parent_namespace=parent_namespace,
-                queue=queue
-            )
-            field_object['types'].append(file_obj)
-            if file_references:
-                references += file_references
+                queue=queue,
+                references=references
+            ))
 
         # nested complex record
         elif field_type == 'enum':
-            file_obj, file_references = _enum_field(
-                field=typ,
+            kwargs['union_types'].append(_enum_field(
+                field={'name': 'uniontype', 'type': typ},
                 parent_namespace=parent_namespace,
-                queue=queue
-            )
-            field_object['types'].append(file_obj)
-            if file_references:
-                references += file_references
+                queue=queue,
+                references=references
+            ))
 
         # references to previously defined complex types
+        # handle reference types
         elif field_type == 'reference':
-            old_reference = [ref for ref in references
-                             if ref['name'] == field['type']][0]
-            field_object['items'] = _reference_type(
-                field=field['items'],
-                reference=old_reference
+            kwargs['union_types'].append(_reference_type(
+                field={'name': 'uniontype'},
+                references=references
+            ))
+
+        else:
+            raise ValueError(
+                f"avro type {field['items']['type']} is not supported"
             )
 
-    return field_object, references
+    return Field(**kwargs)

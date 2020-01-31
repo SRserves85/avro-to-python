@@ -3,9 +3,9 @@
 {% include 'imports/fileImports.j2'%}
 {##}
 {##}
-{%- if file.type == 'enum' -%}
+{%- if file.avrotype == 'enum' -%}
 {%- include 'files/enum.j2' -%}
-{%- elif file.type == 'record' -%}
+{%- elif file.avrotype == 'record' -%}
 {%- include 'files/record.j2' -%}
 {%- endif -%}
 {%- include 'partials/footer.j2' %}

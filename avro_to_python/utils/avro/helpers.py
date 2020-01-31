@@ -1,6 +1,9 @@
 """ contains helper function for parsing avro schema """
 
-from typing import List
+from typing import List, Tuple
+
+from avro_to_python.classes.reference import Reference
+from avro_to_python.classes.field import Field
 
 from avro_to_python.utils.exceptions import BadReferenceError
 from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPE_MAP
@@ -22,12 +25,10 @@ def _create_reference(file: dict) -> dict:
     if any([('name' not in file), ('namespace') not in file]):
         raise BadReferenceError
 
-    reference = {
-        'avro_type': 'reference',
-        'name': file['name'],
-        'namespace': file['namespace']
-    }
-    return reference
+    return Reference(
+        name=file['name'],
+        namespace=file['namespace']
+    )
 
 
 def _get_namespace(obj: dict, parent_namespace: str=None) -> None:
@@ -61,7 +62,7 @@ def _get_namespace(obj: dict, parent_namespace: str=None) -> None:
 
 
 def get_union_types(
-    field: dict,
+    field: Field,
     PRIMITIVE_TYPE_MAP: dict=PRIMITIVE_TYPE_MAP
 ) -> str:
     """ Takes a field object and returns the types of the fields
@@ -81,17 +82,17 @@ def get_union_types(
 
     out_types = []
 
-    for obj in field['types']:
+    for obj in field.union_types:
 
         # primitive type
-        if obj['avro_type'] == 'primitive':
-            out_types.append(PRIMITIVE_TYPE_MAP.get(obj['type']))
+        if obj.fieldtype == 'primitive':
+            out_types.append(PRIMITIVE_TYPE_MAP.get(obj.avrotype))
 
         # reference to a named type
-        elif obj['avro_type'] == 'reference':
-            out_types.append(obj['name'])
+        elif obj.fieldtype == 'reference':
+            out_types.append(obj.reference_name)
 
-        elif obj['avro_type'] == 'array':
+        elif obj.fieldtype == 'array':
             out_types.append('list')
 
         else:
@@ -100,7 +101,7 @@ def get_union_types(
     return ','.join(out_types)
 
 
-def dedupe_imports(imports: List[dict]) -> None:
+def dedupe_imports(imports: List[Reference]) -> None:
     """ Dedupes list of imports
 
     Parameters
@@ -112,8 +113,28 @@ def dedupe_imports(imports: List[dict]) -> None:
     -------
         None
     """
-    hashmap = dict()
+    hashmap = {}
     for i, obj in enumerate(imports):
-        hashmap[obj['name'] + obj['namespace']] = obj
+        hashmap[obj.name + obj.namespace] = obj
 
     return list(hashmap.values())
+
+
+def split_namespace(s: str) -> Tuple[str, str]:
+    """ Splits a namespace and name into their parts
+
+    Parameters
+    ----------
+        s: str
+            string to be split
+
+    Returns
+    -------
+        (tuple)
+            namespace: str
+            name: str
+    """
+    split = s.split('.')
+    name = split.pop()
+    namespace = '.'.join(split)
+    return (namespace, name)

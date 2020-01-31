@@ -1,6 +1,7 @@
 """ tests helper avro reader functions """
 
 import unittest
+from avro_to_python.classes.reference import Reference
 from avro_to_python.utils.avro.helpers import (
     _create_reference, _get_namespace, dedupe_imports
 )
@@ -19,7 +20,6 @@ class AvroHelperTests(unittest.TestCase):
 
         # test the function works
         expected = {
-            'avro_type': 'reference',
             'name': 'test',
             'namespace': 'test.test'
         }
@@ -29,7 +29,7 @@ class AvroHelperTests(unittest.TestCase):
             'namespace': 'test.test'
         })
 
-        outcome = expected == created
+        outcome = Reference(**expected) == created
         self.assertTrue(
             outcome,
             'expected a different reference to be created'
@@ -94,15 +94,15 @@ class AvroHelperTests(unittest.TestCase):
         """ tests the dedupe_imports helper function works """
 
         expected = [
-            {'name': 'Test', 'namespace': 'test.namespace'},
-            {'name': 'Test2', 'namespace': 'test2.namespace'}
+            Reference(**{'name': 'Test', 'namespace': 'test.namespace'}),
+            Reference(**{'name': 'Test2', 'namespace': 'test2.namespace'})
         ]
 
         has_dupes = [
-            {'name': 'Test', 'namespace': 'test.namespace'},
-            {'name': 'Test', 'namespace': 'test.namespace'},
-            {'name': 'Test2', 'namespace': 'test2.namespace'},
-            {'name': 'Test2', 'namespace': 'test2.namespace'}
+            Reference(**{'name': 'Test', 'namespace': 'test.namespace'}),
+            Reference(**{'name': 'Test', 'namespace': 'test.namespace'}),
+            Reference(**{'name': 'Test2', 'namespace': 'test2.namespace'}),
+            Reference(**{'name': 'Test2', 'namespace': 'test2.namespace'})
         ]
 
         self.assertEqual(

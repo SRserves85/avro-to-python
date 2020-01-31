@@ -5,14 +5,14 @@
         if isinstance(values, list):
             for element in values:
                 {#- handle tons of types which sucks... -#}
-                {%- if field['items']['avro_type'] == 'reference' %}
-                self.{{name}}.append({{field['items']['name']}}(element))
-                {%- elif field['items']['avro_type'] == 'primitive'%}
-                if isinstance(element, {{primitive_type_map[field['items']['type']]}}):
+                {%- if field.array_item_type.fieldtype == 'reference' %}
+                self.{{name}}.append({{field.array_item_type.reference_name}}(element))
+                {%- elif field.array_item_type.fieldtype == 'primitive'%}
+                if isinstance(element, {{primitive_type_map[field.array_item_type.avrotype]}}):
                     self.{{name}}.append(element)
                 else:
                     raise TypeError(
-                        "Type for '{{name}}' should be '{{primitive_type_map[field['items']['type']]}}'"
+                        "Type for '{{name}}' should be '{{primitive_type_map[field.array_item_type.fieldtype]}}'"
                     )
                 {%- endif %}
         else:

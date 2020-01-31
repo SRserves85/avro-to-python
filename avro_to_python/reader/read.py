@@ -4,6 +4,9 @@ import copy
 import os
 import json
 
+from avro_to_python.classes.node import Node
+from avro_to_python.classes.file import File
+
 from avro_to_python.utils.paths import (
     get_system_path, get_avsc_files, verify_path_exists
 )
@@ -23,6 +26,7 @@ class AvscReader(object):
     Should contain all logic for reading and formatting information
     within a dir of avsc files or a single file
     """
+    file_tree = None
 
     def __init__(self, directory: str=None, file: str=None) -> None:
         """ Initializer should just create a list of files to process
@@ -44,6 +48,7 @@ class AvscReader(object):
 
         # initialize cental object
         self.obj = {}
+        self.file_tree = None
 
         if directory:
             if os.path.isfile(directory):
@@ -91,23 +96,24 @@ class AvscReader(object):
                 child node in tree representing namespace destination
         """
         current_node = root_node
-        nodes = namespace.split('.')
+        namespaces = namespace.split('.')
 
         # empty namespace
         if namespace == '':
             return current_node
 
-        for node in nodes:
+        for name in namespaces:
 
             # create node if it doesn't exist
-            if node not in current_node['children']:
-                current_node['children'][node] = {
-                    'children': {},
-                    'files': {},
-                    'visited': False
-                }
+            if name not in current_node.children:
+                current_node.children[name] = Node(
+                    name=name,
+                    children={},
+                    files={}
+                )
+
             # move through tree
-            current_node = current_node['children'][node]
+            current_node = current_node.children[name]
 
         return current_node
 
@@ -122,14 +128,10 @@ class AvscReader(object):
     def _build_namespace_tree(self) -> None:
         """ builds tree structure on namespace
         """
-        # think of namespaces as acyclic trees
-        root_node = {
-            'children': {},
-            'files': {},
-            'visited': False
-        }
+        # initialize empty node with empty string name
+        root_node = Node(name='')
 
-        # populate queue prir to tree building
+        # populate queue prior to tree building
         queue = copy.deepcopy(self.obj['avsc'])
 
         while queue:
@@ -145,26 +147,29 @@ class AvscReader(object):
                 root_node=root_node, namespace=item['namespace']
             )
 
-            # create file obj
-            current_node['files'][item['name']] = {}
-            file = current_node['files'][item['name']]
-
-            # add file information
-            file['name'] = item['name']
-            file['type'] = item['type']
-            file['namespace'] = item['namespace']
-            file['schema'] = item
-            file['imports'] = []
+            # initialize empty file obj for mutation
+            file = File(
+                name=item['name'],
+                avrotype=item['type'],
+                namespace=item['namespace'],
+                schema=item,
+                fields={},
+                imports=[],
+                enum_sumbols=[]
+            )
 
             # handle record type
-            if file['type'] == 'record':
+            if file.avrotype == 'record':
                 _record_file(file, item, queue)
 
             # handle enum type file
-            elif file['type'] == 'enum':
-                _enum_file(file)
+            elif file.avrotype == 'enum':
+                _enum_file(file, item)
             else:
                 raise ValueError(
                     f"{file['type']} is currently not supported."
                 )
+
+            current_node.files[item['name']] = file
+
         self.file_tree = root_node

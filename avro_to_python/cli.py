@@ -38,6 +38,7 @@ def main(source, target, pip=None, author=None, package_version=None):
         package_version=package_version
     )
     writer.write(root_dir=target)
+    del reader
     return 0
 
 

@@ -2,6 +2,7 @@
 
 
 from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPES
+from avro_to_python.utils.avro.helpers import split_namespace
 
 
 def _get_field_type(field: dict, references: list=None) -> str:
@@ -51,18 +52,18 @@ def _get_field_type(field: dict, references: list=None) -> str:
         return 'union'
 
     # handle primitive types
-    elif field['type'] in PRIMITIVE_TYPES:
-        return 'primitive'
+    elif isinstance(field['type'], str):
+        if field['type'] in PRIMITIVE_TYPES:
+            return 'primitive'
 
-    elif field['type'] == 'record':
-        return 'record'
+        elif field['type'] == 'record':
+            return 'record'
 
-    elif field['type'] == 'enum':
-        return 'enum'
+        elif field['type'] == 'enum':
+            return 'enum'
 
-    # field is a reference to a enum or record earlier defined
-    elif references:
-        if field['type'] in [ref['name'] for ref in references]:
+        # field is a reference to a enum or record
+        else:
             return 'reference'
 
     else:

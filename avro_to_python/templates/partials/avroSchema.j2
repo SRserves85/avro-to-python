@@ -3,5 +3,5 @@
 {%- endmacro -%}
 
 {%- block schema -%}
-{{get_json_schema(file.get('schema'))|indent(4)}}
+{{get_json_schema(file.schema)|indent(4)}}
 {% endblock -%}

@@ -2,18 +2,19 @@
 
 from typing import Tuple
 
-from avro_to_python.utils.avro.helpers import (
-    _create_reference, _get_namespace
-)
+from avro_to_python.classes.field import Field
+
 from avro_to_python.utils.avro.types.primitive import _primitive_type
-from avro_to_python.utils.avro.types.type_factory import _get_field_type
+from avro_to_python.utils.avro.types.record import _record_field
+from avro_to_python.utils.avro.types.enum import _enum_field
 from avro_to_python.utils.avro.types.reference import _reference_type
+from avro_to_python.utils.avro.types.type_factory import _get_field_type
 
 
 def _array_field(field: dict,
                  parent_namespace: str=None,
                  queue: list=None,
-                 references: list=None) -> Tuple[dict, list]:
+                 references: list=[]) -> Tuple[dict, list]:
     """ helper function for adding information to array fields
 
     If array contains references to embedded enum or record,
@@ -27,55 +28,68 @@ def _array_field(field: dict,
             namespace of the parent file
         queue: list
             queue of files to add to project
+        references: list
 
     Returns
     -------
-        field_object: dict
-            object containing necessary info on array field
-        references: list
-            reference object for doing file imports
+        Field
     """
-
-    field_object = {
-        'avro_type': 'array'
+    kwargs = {
+        'name': field['name'],
+        'fieldtype': 'array',
+        'avrotype': None,
+        'default': None,
+        'reference_name': None,
+        'reference_namespace': None,
+        'array_item_type': None
     }
-    reference = []
 
-    if isinstance(field['items'], str):
-        field['items'] = {'type': field['items']}
+    if isinstance(field['type']['items'], str):
+        field['type']['items'] = {'type': field['type']['items']}
 
     field_item_type = _get_field_type(
-        field['items'],
+        field['type']['items'],
         references
     )
 
     # handle primitive types
     if field_item_type == 'primitive':
-        field_object['items'] = _primitive_type(field)
-        return field_object, reference
+        # add None name to primitive type
+        field['type']['items']['name'] = None
+        kwargs.update({
+            'array_item_type': _primitive_type(field['type']['items'])
+        })
 
     # handle complex types
-    elif field_item_type in ('record', 'enum'):
+    elif field_item_type == 'record':
+        # array fields don't have names and type need to be nested
+        kwargs.update({
+            'array_item_type': _record_field(
+                field={'name': 'arrayfield', 'type': field['type']['items'], 'namespace': field['type'].get('namespace', None)},
+                parent_namespace=parent_namespace,
+                queue=queue, references=references)
+        })
 
-        field['items']['namespace'] = _get_namespace(
-            obj=field['items'],
-            parent_namespace=parent_namespace
-        )
-        reference = _create_reference(field['items'])
-        field_object['items'] = reference
-        queue.append(field['items'])
-        return field_object, [reference]
+    elif field_item_type == 'enum':
+        # array fields don't have names and type need to be nested
+        kwargs.update({
+            'array_item_type': _enum_field(
+                field={'name': 'arrayfield', 'type': field['type']['items'], 'namespace': field['type'].get('namespace', None)},
+                parent_namespace=parent_namespace,
+                queue=queue, references=references)
+        })
 
+    # handle reference types
     elif field_item_type == 'reference':
-        old_reference = [ref for ref in references
-                         if ref['name'] == field['type']][0]
-        field_object['items'] = _reference_type(
-            field=field['items'],
-            reference=old_reference
-        )
-        return field_object, reference
+        kwargs.update({
+            'array_item_type': _reference_type(
+                field={'name': field['type']['items']['type']},
+                references=references)
+        })
 
     else:
         raise ValueError(
             f"avro type {field['items']['type']} is not supported"
         )
+
+    return Field(**kwargs)

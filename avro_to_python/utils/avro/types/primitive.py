@@ -2,6 +2,17 @@
 
 from typing import Union
 
+from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPES
+
+from avro_to_python.classes.field import Field
+
+kwargs = {
+    'name': None,
+    'fieldtype': 'primitive',
+    'avrotype': None,
+    'default': None
+}
+
 
 def _primitive_type(field: Union[dict, str]) -> dict:
     """ Function to add information to primitive type fields
@@ -13,36 +24,33 @@ def _primitive_type(field: Union[dict, str]) -> dict:
 
     Returns
     -------
-        field_object: dict
-            object with necessary information on field type information
+
+        Field
     """
+    kwargs.update({
+        'name': field['name'],
+        'default': field.get('default', None)
+    })
+
     if isinstance(field, dict):
         if field.get('type', None) == 'array':
-            return {
-                'avro_type': 'primitive',
-                'type': field['items']['type'],
-                'default': field.get('default', None)
-            }
-        if isinstance(field.get('type'), dict):
+                kwargs.update({'avrotype': field['items']['type']})
+
+        elif isinstance(field.get('type'), dict):
             if field.get('type', {}).get('logicalType'):
-                return {
-                    'avro_type': 'primitive',
-                    'type': field['type']['type'],
-                    'default': None
-                }
+                kwargs.update({'avrotype': field['type']['type']})
+
+        elif isinstance(field.get('type'), str):
+            if field['type'] in PRIMITIVE_TYPES:
+                kwargs.update({'avrotype': field['type']})
+
         else:
-            return {
-                'avro_type': 'primitive',
-                'type': field['type'],
-                'default': field.get('default', None)
-            }
+            kwargs.update({'avrotype': field['item']['type']})
+
     elif isinstance(field, str):
-        return {
-            'avro_type': 'primitive',
-            'type': field,
-            'default': None
-        }
+        kwargs.update({'avrotype': field['item']['type']})
     else:
         raise ValueError(
             f'{type(field)} is not in (dict, str)'
         )
+    return Field(**kwargs)

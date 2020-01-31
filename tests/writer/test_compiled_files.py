@@ -11,6 +11,8 @@ from avro_to_python.writer.writer import AvroWriter
 
 
 class PathTests(unittest.TestCase):
+    directory = None
+
     def setUp(self):
         """ place empty avsc files in /tmp dir for testing paths """
         directory = os.path.abspath(avro_to_python.__file__) \
@@ -24,6 +26,8 @@ class PathTests(unittest.TestCase):
         write_path = os.path.abspath('./')
         writer.write(root_dir=write_path)
         sys.path.append(write_path)
+
+        self.directory = directory
 
     def tearDown(self):
         """ remove all the compiled files"""
@@ -159,11 +163,11 @@ class PathTests(unittest.TestCase):
         from records import RecordWithArray
         from records import Thing
 
-        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40]}
-        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40]}  # NOQA
-        data3 = {'things': [], 'numbers': []}
-        data4 = {'things': [{'id': 10}, {'id': 50}], 'numbers': ['not a long']}
-        data5 = {'things': [{'id': 'not a long'}, {'id': 50}], 'numbers': [10, 40]}  # NOQA
+        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
+        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
+        data3 = {'things': [], 'numbers': [], 'things2': []}
+        data4 = {'things': [{'id': 10}, {'id': 50}], 'numbers': ['not a long'], 'things2': []}  # NOQA
+        data5 = {'things': [{'id': 'not a long'}, {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
 
         record1 = RecordWithArray(data1)
         record2 = RecordWithArray(data2)
@@ -177,7 +181,7 @@ class PathTests(unittest.TestCase):
 
         self.assertEqual(
             record3.serialize(),
-            '{"things": [], "numbers": []}'
+            '{"things": [], "numbers": [], "things2": []}'
         )
 
         self.assertEqual(

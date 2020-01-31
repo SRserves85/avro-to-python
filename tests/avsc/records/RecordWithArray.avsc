@@ -21,5 +21,13 @@
       "type" : "array",
       "items" : "int"
     }
+  }, {
+    "name": "things2",
+    "type": {
+      "type": "array",
+      "items": {
+        "type": "Thing"
+      }
+    }
   } ]
 }
