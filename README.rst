@@ -138,6 +138,7 @@ Reader
 - [X] Array Types
 - [X] Union types
 - [X] References to other files
+- [X] Map Types
 - [ ] Logical Types (Currently just converts to primitive types)
 
 Writer
@@ -148,6 +149,7 @@ Writer
 - [X] Primitive Types Schema
 - [X] Array Types Schema
 - [X] Union Types Schema
+- [X] Map Types
 - [ ] Logical Types Schema (Currently just converts to primitive types)
 - [X] Add configs to pip install package
 
