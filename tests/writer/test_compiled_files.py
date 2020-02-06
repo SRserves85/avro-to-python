@@ -163,11 +163,11 @@ class PathTests(unittest.TestCase):
         from records import RecordWithArray
         from records import Thing
 
-        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
-        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
-        data3 = {'things': [], 'numbers': [], 'things2': []}
-        data4 = {'things': [{'id': 10}, {'id': 50}], 'numbers': ['not a long'], 'things2': []}  # NOQA
-        data5 = {'things': [{'id': 'not a long'}, {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
+        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40]}  # NOQA
+        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40]}  # NOQA
+        data3 = {'things': [], 'numbers': []}
+        data4 = {'things': [{'id': 10}, {'id': 50}], 'numbers': ['not a long']}  # NOQA
+        data5 = {'things': [{'id': 'not a long'}, {'id': 50}], 'numbers': [10, 40]}  # NOQA
 
         record1 = RecordWithArray(data1)
         record2 = RecordWithArray(data2)
@@ -181,7 +181,7 @@ class PathTests(unittest.TestCase):
 
         self.assertEqual(
             record3.serialize(),
-            '{"things": [], "numbers": [], "things2": []}'
+            '{"things": [], "numbers": []}'
         )
 
         self.assertEqual(
