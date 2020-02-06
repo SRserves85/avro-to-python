@@ -105,6 +105,7 @@ class AvroWriter(object):
         get_or_create_path(self.root_dir)
         self._write_helper_file()
 
+        self._reset_tree()
         self._dfs(self.tree)
 
         if self.pip:
@@ -193,12 +194,34 @@ class AvroWriter(object):
         )
         return filetext
 
+    def _reset_tree(self, node: Node=None) -> None:
+        """ resets the visited flags in node objects
+
+        Parameters
+        ----------
+            node:
+                Node
+
+        Returns
+        -------
+            None
+        """
+        # mark as visited
+        if not node:
+            node = self.tree
+
+        node.visited = False
+
+        for name in node.children:
+            if node.children[name].visited:
+                self._reset_tree(node=node.children[name])
+
     def _dfs(self, node: Node=None, namespace: str='') -> None:
         """ yields files from tree via DFS
 
         Parameters
         ----------
-            node: dict
+            node: Node
                node in graph for traversal
                if not specified, will use root of tree
 
