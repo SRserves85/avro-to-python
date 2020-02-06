@@ -7,5 +7,7 @@
 {%- include 'fields/arrayField.j2' -%}
 {%- elif field.fieldtype == 'union' -%}
 {%- include 'fields/unionField.j2' -%}
+{%- elif field.fieldtype == 'map' -%}
+{%- include 'fields/mapField.j2' -%}
 {% endif -%}
 {% endblock %}

@@ -264,3 +264,36 @@ class AvroReaderTests(unittest.TestCase):
             obj.children['records'].files['RecordWithArray'].fields['things2'].array_item_type.fieldtype,  # NOQA
             'reference'
         )
+
+    def testRecordWithMap(self):
+        filepath = self.directory + '/RecordWithMap.avsc'
+
+        reader = AvscReader(file=filepath)
+        reader.read()
+
+        # TestReadThing tests from earlier since Thing is same schema
+        obj = reader.file_tree
+
+        # should have 1 field
+        self.assertEqual(
+            len(obj.children['records'].files['RecordWithMap'].fields),
+            2
+        )
+
+        # field should be of type map
+        self.assertEqual(
+            obj.children['records'].files['RecordWithMap'].fields['thingMap'].fieldtype,  # NOQA
+            'map'
+        )
+
+        # thingmap field should be of type Thing
+        self.assertEqual(
+            obj.children['records'].files['RecordWithMap'].fields['thingMap'].map_type.reference_name,  # NOQA
+            'Thing'
+        )
+
+        # mappint field should be of type Thing
+        self.assertEqual(
+            obj.children['records'].files['RecordWithMap'].fields['intMap'].map_type.avrotype,  # NOQA
+            'int'
+        )

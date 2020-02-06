@@ -1,0 +1,28 @@
+{
+  "type" : "record",
+  "name" : "RecordWithMap",
+  "namespace" : "records",
+  "fields" : [ 
+    {
+      "name" : "thingMap",
+      "type" : {
+        "type" : "map",
+        "values" : {
+          "type" : "record",
+          "name" : "Thing",
+          "fields" : [ {
+            "name" : "id",
+            "type" : "int"
+        } ]
+      }
+    }
+  },
+  {
+    "name": "intMap",
+
+    "type": {
+       "type": "map",
+       "values": "int"
+    }
+  } ]
+}

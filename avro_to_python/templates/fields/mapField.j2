@@ -1,0 +1,30 @@
+{%- block map %}
+    def set_{{name}}(self, values: list) -> None:
+
+        self.{{name}} = []
+        if isinstance(values, list):
+            for item in values:
+                for key, value in item.items():
+
+                    if not isinstance(key, str):
+                        raise TypeError(
+                            "Keys in map types must be strings!"
+                        )
+
+                    {#- handle tons of types which sucks... -#}
+                    {%- if field.map_type.fieldtype == 'reference' %}
+                    self.{{name}}.append({key: {{field.map_type.reference_name}}(value)})
+                    {%- elif field.map_type.fieldtype == 'primitive'%}
+                    if isinstance(value, {{primitive_type_map[field.map_type.avrotype]}}):
+                        self.{{name}}.append({key: value})
+                    else:
+                        raise TypeError(
+                            "Type for '{{name}}' should be '{{primitive_type_map[field.map_type.avrotype]}}'"
+                        )
+                    {%- endif %}
+        else:
+            raise TypeError("Field '{{name}}' should be type list")
+
+    def get_{{name}}(self) -> list:
+        return self.{{name}}
+{%- endblock -%}

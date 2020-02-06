@@ -262,3 +262,27 @@ class PathTests(unittest.TestCase):
             record2.chars,
             'string default'
         )
+
+    def test_map_record(self):
+        """ tests that nested things have correct mappings and namespaces """
+
+        from records import RecordWithMap
+        from records import Thing
+
+        data1 = {'thingMap': [{'string1': {'id': 10}},
+                              {'string2': Thing({'id': 10})}],
+                 'intMap': [{'lksdfl': 23}]}
+        data2 = {'thingMap': [{'string1': {'id': 10}},
+                              {'string2': Thing({'id': 10})}],
+                 'intMap': [{'lksdfl': 'NOT A STRING'}]}
+
+        record1 = RecordWithMap(data1)
+        record2 = RecordWithMap(record1)
+
+        with self.assertRaises(TypeError):
+            RecordWithMap(data2)
+
+        self.assertEqual(
+            record1.serialize(),
+            record2.serialize()
+        )

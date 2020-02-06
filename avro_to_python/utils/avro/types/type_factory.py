@@ -25,6 +25,9 @@ def _get_field_type(field: dict, references: list=None) -> str:
         if field['type']['type'] == 'array':
             return 'array'
 
+        if field['type']['type'] == 'map':
+            return 'map'
+
         # nested record
         elif field['type']['type'] == 'record':
             return 'record'

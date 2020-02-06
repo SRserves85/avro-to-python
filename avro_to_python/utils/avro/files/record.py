@@ -13,6 +13,7 @@ from avro_to_python.utils.avro.types.primitive import _primitive_type
 from avro_to_python.utils.avro.types.reference import _reference_type
 from avro_to_python.utils.avro.types.type_factory import _get_field_type
 from avro_to_python.utils.avro.types.union import _union_field
+from avro_to_python.utils.avro.types.map import _map_field
 
 
 def _record_file(file: File, item: dict, queue: List[dict]) -> None:
@@ -41,6 +42,14 @@ def _record_file(file: File, item: dict, queue: List[dict]) -> None:
 
         if fieldtype == 'array':
             field = _array_field(
+                field=field,
+                parent_namespace=file.namespace,
+                queue=queue,
+                references=references
+            )
+
+        elif fieldtype == 'map':
+            field = _map_field(
                 field=field,
                 parent_namespace=file.namespace,
                 queue=queue,
