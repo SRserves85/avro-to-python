@@ -271,7 +271,11 @@ class PathTests(unittest.TestCase):
 
         data1 = {'thingMap': [{'string1': {'id': 10}},
                               {'string2': Thing({'id': 10})}],
-                 'intMap': [{'lksdfl': 23}]}
+                 'intMap': [{'lksdfl': 23}],
+                 'thingMap2': [{'string1': {'id': 10}},
+                              {'string2': Thing({'id': 10})}],
+                 'thingMap3': [{'string1': {'id': 10}},
+                              {'string2': Thing({'id': 10})}]}
         data2 = {'thingMap': [{'string1': {'id': 10}},
                               {'string2': Thing({'id': 10})}],
                  'intMap': [{'lksdfl': 'NOT A STRING'}]}

@@ -277,7 +277,7 @@ class AvroReaderTests(unittest.TestCase):
         # should have 1 field
         self.assertEqual(
             len(obj.children['records'].files['RecordWithMap'].fields),
-            2
+            4
         )
 
         # field should be of type map

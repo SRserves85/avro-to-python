@@ -86,7 +86,8 @@ def _union_field(field: dict,
         # handle reference types
         elif field_type == 'reference':
             kwargs['union_types'].append(_reference_type(
-                field={'name': 'uniontype'},
+                field={'name': 'uniontype',
+                       'type': typ},
                 references=references
             ))
 

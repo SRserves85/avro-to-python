@@ -24,5 +24,19 @@
        "type": "map",
        "values": "int"
     }
+  },
+  {
+    "name" : "thingMap2",
+    "type" : {
+      "type" : "map",
+      "values" : "Thing"
+    }
+  },
+  {
+    "name" : "thingMap3",
+    "type" : {
+      "type" : "map",
+      "values" : "record.Thing"
+    }
   } ]
 }

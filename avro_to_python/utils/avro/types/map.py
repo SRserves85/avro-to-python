@@ -91,7 +91,7 @@ def _map_field(field: dict,
     elif map_type == 'reference':
         kwargs.update({
             'map_type': _reference_type(
-                field={'name': field['type']['values']['type']},
+                field={'name': field['type']['values']},
                 references=references)
         })
 
