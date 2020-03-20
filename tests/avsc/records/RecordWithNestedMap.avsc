@@ -1,0 +1,40 @@
+{
+  "type" : "record",
+  "name" : "RecordWithNestedMap",
+  "namespace" : "records",
+  "fields" : [ 
+    {
+      "name" : "thingMap",
+      "type" : {
+        "type" : "map",
+        "values" : {
+          "type" : "record",
+          "name" : "Thing",
+          "fields" : [ {
+            "name" : "id",
+            "type" : "int"
+        } ]
+      }
+    }
+  },
+  {
+    "name" : "nestedThingMap",
+    "type" : {
+      "type" : "map",
+      "values" : {
+        "type": "map",
+        "values": "Thing"
+      }
+    }
+  },
+  {
+    "name" : "nestedIntMap",
+    "type" : {
+      "type" : "map",
+      "values" : {
+        "type": "map",
+        "values": "int"
+      }
+    }
+  }]
+}

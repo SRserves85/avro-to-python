@@ -292,8 +292,33 @@ class AvroReaderTests(unittest.TestCase):
             'Thing'
         )
 
-        # mappint field should be of type Thing
+        # map int field should be of type Thing
         self.assertEqual(
             obj.children['records'].files['RecordWithMap'].fields['intMap'].map_type.avrotype,  # NOQA
             'int'
+        )
+
+    def testRecordWithNestedMap(self):
+        filepath = self.directory + '/RecordWithNestedMap.avsc'
+
+        reader = AvscReader(file=filepath)
+        reader.read()
+
+        # test parsing works for nested maps
+        obj = reader.file_tree
+        file = obj.children['records'].files['RecordWithNestedMap']
+
+        self.assertEqual(
+            len(obj.children['records'].files['RecordWithNestedMap'].fields),
+            3
+        )
+
+        # assert reader picked up the nested map
+        self.assertEqual(
+            file.fields['nestedThingMap'].map_type.map_type.name,
+            'Thing'
+        )
+        self.assertEqual(
+            file.fields['nestedThingMap'].map_type.map_type.fieldtype,
+            'reference'
         )

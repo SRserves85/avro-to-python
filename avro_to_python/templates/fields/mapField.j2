@@ -11,7 +11,7 @@
                             "Keys in map types must be strings!"
                         )
 
-                    {#- handle tons of types which sucks... -#}
+                    {#- handle tons of types without recursion which sucks... -#}
                     {%- if field.map_type.fieldtype == 'reference' %}
                     self.{{name}}.append({key: {{field.map_type.reference_name}}(value)})
                     {%- elif field.map_type.fieldtype == 'primitive'%}
@@ -21,6 +21,26 @@
                         raise TypeError(
                             "Type for '{{name}}' should be '{{primitive_type_map[field.map_type.avrotype]}}'"
                         )
+                    {%- elif field.map_type.fieldtype == 'map'%}
+                    sub_array = []
+                    if isinstance(value, list):
+                        for sub_item in value:
+                            for sub_key, sub_value in sub_item.items():
+                                if not isinstance(sub_key, str):
+                                    raise TypeError(
+                                        "keys in map types must be strings"
+                                    )
+                                {%- if field.map_type.map_type.fieldtype == 'reference' %}
+                                sub_array.append({sub_key: {{field.map_type.map_type.reference_name}}(sub_value)})
+                                {%- elif field.map_type.map_type.fieldtype == 'primitive'%}
+                                if isinstance(sub_value, {{primitive_type_map[field.map_type.map_type.avrotype]}}):
+                                    sub_array.append({sub_key: sub_value})
+                                else:
+                                    raise TypeError(
+                                        "Type for '{{name}}' should be '{{primitive_type_map[field.map_type.map_type.avrotype]}}'"
+                                    )
+                                {%- endif %}
+                    self.{{name}}.append({key: sub_array})
                     {%- endif %}
         else:
             raise TypeError("Field '{{name}}' should be type list")

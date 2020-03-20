@@ -87,6 +87,16 @@ def _map_field(field: dict,
                 queue=queue, references=references)
         })
 
+    elif map_type == 'map':
+        # handle nested maps
+        kwargs.update({
+            'map_type': _map_field(
+                field={'name': 'nestedMap', 'type': field['type']['values'], 'namespace''namespace': field['type']['values'].get('namespace', None)},
+                parent_namespace=parent_namespace,
+                queue=queue, references=references
+            )
+        })
+
     # handle reference types
     elif map_type == 'reference':
         kwargs.update({
