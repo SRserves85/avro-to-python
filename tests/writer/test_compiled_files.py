@@ -321,6 +321,16 @@ class PathTests(unittest.TestCase):
                     {'string1': 10},
                     {'string2': 11}
                 ]},
+            ],
+            'mappedThingArray': [
+                {'foo': [
+                    {'id': 10},
+                    Thing({'id': 20})
+                ]},
+                {'bar': [
+                    {'id': 10},
+                    Thing({'id': 20})
+                ]}
             ]
         }
         data2 = {
@@ -347,6 +357,16 @@ class PathTests(unittest.TestCase):
                     {'string1': 10},
                     {'string2': 11}
                 ]},
+            ],
+            'mappedThingArray': [
+                {'foo': [
+                    {'id': 10},
+                    Thing({'id': 20})
+                ]},
+                {'bar': [
+                    {'id': 10},
+                    Thing({'id': 20})
+                ]}
             ]
         }
         record1 = RecordWithNestedMap(data1)

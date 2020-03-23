@@ -310,7 +310,7 @@ class AvroReaderTests(unittest.TestCase):
 
         self.assertEqual(
             len(obj.children['records'].files['RecordWithNestedMap'].fields),
-            3
+            4
         )
 
         # assert reader picked up the nested map
@@ -320,5 +320,16 @@ class AvroReaderTests(unittest.TestCase):
         )
         self.assertEqual(
             file.fields['nestedThingMap'].map_type.map_type.fieldtype,
+            'reference'
+        )
+
+        # assert reader picked up nested array in map
+        self.assertEqual(
+            file.fields['mappedThingArray'].map_type.array_item_type.name,
+            'Thing'
+        )
+
+        self.assertEqual(
+            file.fields['mappedThingArray'].map_type.array_item_type.fieldtype,
             'reference'
         )
