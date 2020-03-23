@@ -9,7 +9,7 @@ from avro_to_python.utils.avro.types.primitive import _primitive_type
 from avro_to_python.utils.avro.types.reference import _reference_type
 from avro_to_python.utils.avro.types.enum import _enum_field
 from avro_to_python.utils.avro.types.record import _record_field
-
+from avro_to_python.utils.avro.types.array import _array_field
 
 def _map_field(field: dict,
                parent_namespace: str=None,
@@ -91,6 +91,16 @@ def _map_field(field: dict,
         # handle nested maps
         kwargs.update({
             'map_type': _map_field(
+                field={'name': 'nestedMap', 'type': field['type']['values'], 'namespace''namespace': field['type']['values'].get('namespace', None)},
+                parent_namespace=parent_namespace,
+                queue=queue, references=references
+            )
+        })
+
+    elif map_type == 'array':
+        # handle nested arrays
+        kwargs.update({
+            'map_type': _array_field(
                 field={'name': 'nestedMap', 'type': field['type']['values'], 'namespace''namespace': field['type']['values'].get('namespace', None)},
                 parent_namespace=parent_namespace,
                 queue=queue, references=references

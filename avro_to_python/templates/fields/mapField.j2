@@ -41,6 +41,21 @@
                                     )
                                 {%- endif %}
                     self.{{name}}.append({key: sub_array})
+                    {%- elif field.map_type.fieldtype == 'array'%}
+                    sub_array = []
+                    if isinstance(value, list):
+                        for element in value:
+                            {#- handle tons of types which sucks... -#}
+                            {%- if field.map_type.array_item_type.fieldtype == 'reference' %}
+                            sub_array.append({{field.map_type.array_item_type.reference_name}}(element))
+                            {%- elif field.array_item_type.fieldtype == 'primitive'%}
+                            if isinstance(element, {{primitive_type_map[field.map_type.array_item_type.avrotype]}}):
+                                sub_array.append(element)
+                            else:
+                                raise TypeError(
+                                    "Type for '{{name}}' should be '{{primitive_type_map[field.array_item_type.fieldtype]}}'"
+                                )
+                            {%- endif %}
                     {%- endif %}
         else:
             raise TypeError("Field '{{name}}' should be type list")

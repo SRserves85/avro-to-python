@@ -36,5 +36,17 @@
         "values": "int"
       }
     }
-  }]
+  },
+  {
+    "name": "mappedThingArray",
+    "type": {
+      "type": "map",
+      "values": {
+          "type" : "array",
+          "items" : {
+            "type": "Thing"
+          }
+      }
+    }
+  } ]
 }
