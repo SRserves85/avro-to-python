@@ -111,6 +111,17 @@ class AvroWriter(object):
         if self.pip:
             self._write_setup_file()
             self._write_pip_init_file()
+            self._write_manifest_file()
+
+    def _write_manifest_file(self) -> None:
+        """ writes manifest to recursively include packages """
+        filepath = self.pip_dir + '/MANIFEST.in'
+        template = self.template_env.get_template('files/manifest.j2')
+        filetext = template.render(
+            pip = self.pip
+        )
+        with open(filepath, 'w') as f:
+            f.write(filetext)
 
     def _write_setup_file(self) -> None:
         """ writes the setup.py file to the pip dir"""
