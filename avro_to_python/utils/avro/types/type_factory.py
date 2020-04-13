@@ -2,7 +2,6 @@
 
 
 from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPES
-from avro_to_python.utils.avro.helpers import split_namespace
 
 
 def _get_field_type(field: dict, references: list=None) -> str:
@@ -19,6 +18,7 @@ def _get_field_type(field: dict, references: list=None) -> str:
             type of field
             Must be one of (array, primitive, union, enum, record, logical)
     """
+
     if isinstance(field['type'], dict):
 
         # nested array
@@ -64,6 +64,12 @@ def _get_field_type(field: dict, references: list=None) -> str:
 
         elif field['type'] == 'enum':
             return 'enum'
+
+        elif field['type'] == 'map':
+            return 'map'
+
+        elif field['type'] == 'array':
+            return 'array'
 
         # field is a reference to a enum or record
         else:

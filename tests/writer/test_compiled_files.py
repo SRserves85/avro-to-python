@@ -290,3 +290,92 @@ class PathTests(unittest.TestCase):
             record1.serialize(),
             record2.serialize()
         )
+
+    def test_nested_map_record(self):
+        """ tests that nested maps will work """
+
+        from records import RecordWithNestedMap
+        from records import Thing
+
+        data1 = {
+            'thingMap': [
+                {'string1': {'id': 10}},
+                {'string2': Thing({'id': 10})}
+            ],
+            'nestedThingMap': [
+                {'foo': [
+                    {'string1': {'id': 10}},
+                    {'string2': Thing({'id': 10})}
+                ]},
+                {'bar': [
+                    {'string1': {'id': 10}},
+                    {'string2': Thing({'id': 10})}
+                ]},
+            ],
+            'nestedIntMap': [
+                {'foo': [
+                    {'string1': 10},
+                    {'string2': 11}
+                ]},
+                {'bar': [
+                    {'string1': 10},
+                    {'string2': 11}
+                ]},
+            ],
+            'mappedThingArray': [
+                {'foo': [
+                    {'id': 10},
+                    Thing({'id': 20})
+                ]},
+                {'bar': [
+                    {'id': 10},
+                    Thing({'id': 20})
+                ]}
+            ]
+        }
+        data2 = {
+            'thingMap': [
+                {'string1': {'id': 10}},
+                {'string2': Thing({'id': 10})}
+            ],
+            'nestedThingMap': [
+                {'foo': [
+                    {'string1': {'id': 10}},
+                    {'string2': Thing({'id': 10})}
+                ]},
+                {'bar': [
+                    {'string1': {'id': 10}},
+                    {'string2': Thing({'id': 10})}
+                ]},
+            ],
+            'nestedIntMap': [
+                {'foo': [
+                    {'string1': 'NOT AN INT'},
+                    {'string2': 11}
+                ]},
+                {'bar': [
+                    {'string1': 10},
+                    {'string2': 11}
+                ]},
+            ],
+            'mappedThingArray': [
+                {'foo': [
+                    {'id': 10},
+                    Thing({'id': 20})
+                ]},
+                {'bar': [
+                    {'id': 10},
+                    Thing({'id': 20})
+                ]}
+            ]
+        }
+        record1 = RecordWithNestedMap(data1)
+        record2 = RecordWithNestedMap(record1)
+
+        with self.assertRaises(TypeError):
+            RecordWithNestedMap(data2)
+
+        self.assertEqual(
+            record1.serialize(),
+            record2.serialize()
+        )
