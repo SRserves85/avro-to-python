@@ -252,10 +252,9 @@ class AvroWriter(object):
             )
 
         # add __init__ files for correct imports
-        if imports:
-            self._write_init_file(
-                imports=imports, namespace=namespace
-            )
+        self._write_init_file(
+            imports=imports, namespace=namespace
+        )
 
         # add non-visited children to stack
         for name in node.children:
