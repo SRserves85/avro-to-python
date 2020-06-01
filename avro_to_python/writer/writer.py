@@ -201,7 +201,8 @@ class AvroWriter(object):
             primitive_type_map=PRIMITIVE_TYPE_MAP,
             get_union_types=get_union_types,
             json=json,
-            pip_import=self.pip_import
+            pip_import=self.pip_import,
+            enumerate=enumerate
         )
         return filetext
 

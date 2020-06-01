@@ -9,6 +9,7 @@ from avro_to_python.utils.avro.types.primitive import _primitive_type
 from avro_to_python.utils.avro.types.reference import _reference_type
 from avro_to_python.utils.avro.types.enum import _enum_field
 from avro_to_python.utils.avro.types.record import _record_field
+from avro_to_python.utils.avro.types.array import _array_field
 
 
 def _union_field(field: dict,
@@ -73,6 +74,9 @@ def _union_field(field: dict,
                 references=references
             ))
 
+        elif field_type == 'array':
+            kwargs['union_types'].append(_array_field(field={'name': 'arraytype', 'type': typ}, parent_namespace=parent_namespace, queue=queue, references=references))
+
         # nested complex record
         elif field_type == 'enum':
             kwargs['union_types'].append(_enum_field(
@@ -92,6 +96,7 @@ def _union_field(field: dict,
             ))
 
         else:
+            import pdb; pdb.set_trace()
             raise ValueError(
                 f"avro type {field['items']['type']} is not supported"
             )

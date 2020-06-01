@@ -15,5 +15,12 @@
         "type" : "int"
       } ]
     } ]
+  }, {
+     "name" : "nullOrThingArray",
+     "type" : [ "null", {
+        "type" : "array",
+        "items" : "Thing"
+     } ]
   } ]
 }
+

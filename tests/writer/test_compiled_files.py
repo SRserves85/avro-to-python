@@ -200,9 +200,9 @@ class PathTests(unittest.TestCase):
         from records import RecordWithUnion
         from records import Thing
 
-        data1 = {'optionalString': 'hello', 'intOrThing': Thing({'id': 2})}
+        data1 = {'optionalString': 'hello', 'intOrThing': Thing({'id': 2}), 'nullOrThingArray': None}
         data2 = {'optionalString': 'hello', 'intOrThing': {'id': 2}}
-        data3 = {'optionalString': None, 'intOrThing': 10}
+        data3 = {'optionalString': None, 'intOrThing': 10, 'nullOrThingArray': [{'id': 2}]}
         data4 = {'optionalString': 'hello', 'intOrThing': 'not int or thing'}
 
         record1 = RecordWithUnion(data1)
@@ -210,7 +210,7 @@ class PathTests(unittest.TestCase):
         record3 = RecordWithUnion(data3)
 
         self.assertEqual(
-            '{"optionalString": "hello", "intOrThing": {"id": 2}}',
+            '{"optionalString": "hello", "intOrThing": {"id": 2}, "nullOrThingArray": null}',
             record1.serialize()
         )
 
@@ -220,13 +220,24 @@ class PathTests(unittest.TestCase):
         )
 
         self.assertEqual(
-            record3.__dict__,
-            {'optionalString': None, 'intOrThing': 10}
+            record3.nullOrThingArray[0].id,
+            2
         )
 
         self.assertEqual(
+            record3.optionalString,
+            None
+        )
+
+        self.assertEqual(
+            record3.intOrThing,
+            10
+        )
+
+
+        self.assertEqual(
             record3.serialize(),
-            '{"optionalString": null, "intOrThing": 10}'
+            '{"optionalString": null, "intOrThing": 10, "nullOrThingArray": [{"id": 2}]}'
         )
 
         with self.assertRaises(TypeError):
