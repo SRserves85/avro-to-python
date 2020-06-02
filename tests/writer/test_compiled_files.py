@@ -8,6 +8,7 @@ import unittest
 
 import avro_to_python
 from avro_to_python.reader.read import AvscReader
+from avro_to_python.utils.paths import get_joined_path
 from avro_to_python.writer.writer import AvroWriter
 
 
@@ -16,13 +17,13 @@ class PathTests(unittest.TestCase):
     def setUp(self):
         """ place empty avsc files in /tmp dir for testing paths """
         self.source = os.path.abspath(avro_to_python.__file__) \
-            .replace('avro_to_python/__init__.py', 'tests/avsc/records')
+            .replace(get_joined_path('avro_to_python', '__init__.py'), 'tests/avsc/records')
         reader = AvscReader(directory=self.source)
         reader.read()
         writer = AvroWriter(reader.file_tree)
 
         self.write_path = os.path.abspath(
-            self.source.replace('tests/avsc/records', '')
+            self.source.replace(get_joined_path('tests', 'avsc', 'records'), '')
         )
 
         writer.write(root_dir=self.write_path)
@@ -234,7 +235,6 @@ class PathTests(unittest.TestCase):
             10
         )
 
-
         self.assertEqual(
             record3.serialize(),
             '{"optionalString": null, "intOrThing": 10, "nullOrThingArray": [{"id": 2}]}'
@@ -284,9 +284,9 @@ class PathTests(unittest.TestCase):
                               {'string2': Thing({'id': 10})}],
                  'intMap': [{'lksdfl': 23}],
                  'thingMap2': [{'string1': {'id': 10}},
-                              {'string2': Thing({'id': 10})}],
+                               {'string2': Thing({'id': 10})}],
                  'thingMap3': [{'string1': {'id': 10}},
-                              {'string2': Thing({'id': 10})}]}
+                               {'string2': Thing({'id': 10})}]}
         data2 = {'thingMap': [{'string1': {'id': 10}},
                               {'string2': Thing({'id': 10})}],
                  'intMap': [{'lksdfl': 'NOT A STRING'}]}

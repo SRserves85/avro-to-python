@@ -3,6 +3,22 @@
 import os
 from typing import List
 
+def get_joined_path(*paths: str) -> str:
+    """ Gets system paths joined for the current OS
+
+    Parameters
+    ----------
+        paths: str
+            paths to be joined
+
+    Returns
+    -------
+        paths: str
+            joined paths for the current OS
+
+    """
+
+    return os.path.join(*paths)
 
 def get_avsc_files(directory: str) -> List[str]:
     """ Gets system paths for all avsc files in a dir

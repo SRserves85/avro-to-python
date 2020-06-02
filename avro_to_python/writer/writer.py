@@ -8,11 +8,11 @@ from avro_to_python.classes.node import Node
 from avro_to_python.utils.avro.helpers import get_union_types
 from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPE_MAP
 from avro_to_python.utils.paths import (
-    get_system_path, verify_or_create_namespace_path, get_or_create_path
-)
+    get_system_path, verify_or_create_namespace_path, get_or_create_path,
+    get_joined_path)
 
 
-TEMPLATE_PATH = __file__.replace('writer/writer.py', 'templates/')
+TEMPLATE_PATH = __file__.replace(get_joined_path('writer', 'writer.py'), 'templates/')
 TEMPLATE_PATH = get_system_path(TEMPLATE_PATH)
 
 
