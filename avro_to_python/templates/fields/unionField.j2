@@ -33,10 +33,10 @@
                 {%- elif field.union_types[idx + i].array_item_type.fieldtype == 'primitive'%}
                 if isinstance(element, {{primitive_type_map[field.union_types[idx + i].array_item_type.avrotype]}}):
                     self.{{name}}.append(element)
-                    else:
-                        raise TypeError(
-                            "Type for '{{name}}' should be '{{primitive_type_map[field.union_types[idx + i].array_item_type.fieldtype]}}'"
-                        )
+                else:
+                    raise TypeError(
+                        "Type for '{{name}}' should be '{{primitive_type_map[field.union_types[idx + i].array_item_type.fieldtype]}}'"
+                    )
                 {%- endif %}
 {%- endif %}
 {%- endfor %}
