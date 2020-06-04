@@ -11,6 +11,7 @@ from avro_to_python.utils.paths import (
 
 
 class PathTests(unittest.TestCase):
+
     root = os.path.abspath("/tmp")
     temp_dir = os.path.abspath(get_joined_path(root, 'avro'))
     nest_dir = get_joined_path(temp_dir, 'nest')
@@ -21,8 +22,8 @@ class PathTests(unittest.TestCase):
 
         # create tmp dir and files for path testing
 
-        os.mkdir(self.temp_dir)
-        os.mkdir(self.nest_dir)
+        os.makedirs(self.temp_dir)
+        os.makedirs(self.nest_dir)
 
         with open(get_joined_path(self.temp_dir, 'test1.avsc'), 'w') as f:
             f.write('this is a test file')
