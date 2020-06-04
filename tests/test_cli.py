@@ -11,13 +11,14 @@ from click.testing import CliRunner
 
 import avro_to_python
 from avro_to_python import cli
+from avro_to_python.utils.paths import get_joined_path
 
 
 class CliTests(unittest.TestCase):
     def setUp(self):
         """ place empty avsc files in /tmp dir for testing paths """
         self.source = os.path.abspath(avro_to_python.__file__) \
-            .replace('avro_to_python/__init__.py', 'tests/avsc/records')
+            .replace(get_joined_path('avro_to_python','__init__.py'), 'tests/avsc/records')
 
     def tearDown(self):
         shutil.rmtree('records', ignore_errors=True)

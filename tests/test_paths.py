@@ -1,14 +1,13 @@
 """ tests for the reader and reader utils """
 
-
 import os
 import shutil
 import unittest
 
 from avro_to_python.utils.paths import (
     get_avsc_files, get_system_path, verify_path_exists, is_avsc_file,
-    get_or_create_path, verify_or_create_namespace_path
-)
+    get_or_create_path, verify_or_create_namespace_path,
+    get_joined_path)
 
 
 class PathTests(unittest.TestCase):
@@ -34,14 +33,17 @@ class PathTests(unittest.TestCase):
 
     def test_get_avsc_files(self):
         """ tests that avsc files are read correctly """
+        directory = '/tmp/avro'
+        root = os.path.dirname(directory)
+        base_path = os.path.abspath(get_joined_path(root, directory))
         expected = [
-            '/tmp/avro/test1.avsc',
-            '/tmp/avro/nest/test2.avsc'
+            get_joined_path(base_path, 'test1.avsc'),
+            get_joined_path(base_path, 'nest', 'test2.avsc')
         ]
 
-        files = get_avsc_files('/tmp/avro')
+        files = get_avsc_files(directory)
 
-        bad_file = '/tmp/avro/nest/bad.txt' not in files
+        bad_file = get_joined_path('tmp', 'avro', 'nest', 'bad.txt') not in files
 
         self.assertEqual(
             expected,
@@ -83,7 +85,7 @@ class PathTests(unittest.TestCase):
 
     def test_get_system_file_path(self):
         """ tests that you can get the system path of a file """
-        expected = '/tmp/avro/nest/test2.avsc'
+        expected = get_joined_path('tmp', 'avro', 'nest', 'test2.avsc')
 
         # change dir to alter local path
         cwd = os.getcwd()
@@ -91,7 +93,7 @@ class PathTests(unittest.TestCase):
 
         tmp_wd = os.getcwd()
 
-        expected = tmp_wd + '/avro/nest/test2.avsc'
+        expected = get_joined_path(tmp_wd,'avro', 'nest', 'test2.avsc')
 
         path1 = get_system_path('avro/nest/test2.avsc')
 
