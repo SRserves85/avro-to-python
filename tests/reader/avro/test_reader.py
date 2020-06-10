@@ -5,12 +5,13 @@ import unittest
 
 import avro_to_python
 from avro_to_python.reader.read import AvscReader
+from avro_to_python.utils.paths import get_joined_path
 
 
 class AvroReaderTests(unittest.TestCase):
 
     directory = os.path.abspath(avro_to_python.__file__) \
-        .replace('avro_to_python/__init__.py', 'tests/avsc/records')
+        .replace(get_joined_path('avro_to_python','__init__.py'), 'tests/avsc/records')
 
     def setUp(self):
         pass

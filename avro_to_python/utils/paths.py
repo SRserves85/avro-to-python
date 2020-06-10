@@ -4,6 +4,24 @@ import os
 from typing import List
 
 
+def get_joined_path(*paths: str) -> str:
+    """ Gets system paths joined for the current OS
+
+    Parameters
+    ----------
+        paths: str
+            paths to be joined
+
+    Returns
+    -------
+        paths: str
+            joined paths for the current OS
+
+    """
+
+    return os.path.join(*paths)
+
+
 def get_avsc_files(directory: str) -> List[str]:
     """ Gets system paths for all avsc files in a dir
 
@@ -98,7 +116,7 @@ def verify_or_create_namespace_path(rootdir: str, namespace: str) -> None:
     if not verify_path_exists(rootdir):
         raise OSError('root path does not exist.')
 
-    namespace_path = rootdir + namespace.replace('.', '/') + '/'
+    namespace_path = get_joined_path(rootdir, *namespace.split('.'))
     os.makedirs(namespace_path, exist_ok=True)
 
 
