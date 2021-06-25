@@ -14,6 +14,7 @@ from avro_to_python.utils.avro.types.reference import _reference_type
 from avro_to_python.utils.avro.types.type_factory import _get_field_type
 from avro_to_python.utils.avro.types.union import _union_field
 from avro_to_python.utils.avro.types.map import _map_field
+from avro_to_python.utils.avro.helpers import _get_namespace
 
 
 def _record_file(file: File, item: dict, queue: List[dict]) -> None:
@@ -60,7 +61,8 @@ def _record_file(file: File, item: dict, queue: List[dict]) -> None:
         elif fieldtype == 'record':
             field = _record_field(
                 field=field,
-                parent_namespace=file.namespace,
+                # parent_namespace=field['type']['namespace'],
+                parent_namespace=_get_namespace(field['type'], file.namespace),
                 queue=queue,
                 references=references
             )

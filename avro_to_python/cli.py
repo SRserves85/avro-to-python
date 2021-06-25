@@ -3,6 +3,7 @@
 """Console script for avro_to_python."""
 import os
 import sys
+sys.path.insert(0, '/Users/ethanschwab/Documents/dev/avro-to-python')
 
 import click
 from click import Path
