@@ -13,6 +13,18 @@
         "type" : "string"
       }]
     }
+  }, {
+    "name" : "common",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "Common",
+      "namespace" : "namespace_duplicate_test.common",
+      "fields" : [ {
+        "name" : "uuid",
+        "type" : "string"
+      } ]
+    } ],
+    "default" : null
   }],
     "default" : null
 }
