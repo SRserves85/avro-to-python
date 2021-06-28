@@ -10,6 +10,7 @@ from avro_to_python.utils.avro.types.reference import _reference_type
 from avro_to_python.utils.avro.types.enum import _enum_field
 from avro_to_python.utils.avro.types.record import _record_field
 from avro_to_python.utils.avro.types.array import _array_field
+from avro_to_python.utils.avro.helpers import _get_namespace
 
 
 def _union_field(field: dict,
@@ -69,7 +70,7 @@ def _union_field(field: dict,
         elif field_type == 'record':
             kwargs['union_types'].append(_record_field(
                 field={'name': 'uniontype', 'type': typ},
-                parent_namespace=parent_namespace,
+                parent_namespace=_get_namespace(typ, parent_namespace),
                 queue=queue,
                 references=references
             ))

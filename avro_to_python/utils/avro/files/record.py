@@ -61,7 +61,6 @@ def _record_file(file: File, item: dict, queue: List[dict]) -> None:
         elif fieldtype == 'record':
             field = _record_field(
                 field=field,
-                # parent_namespace=field['type']['namespace'],
                 parent_namespace=_get_namespace(field['type'], file.namespace),
                 queue=queue,
                 references=references
