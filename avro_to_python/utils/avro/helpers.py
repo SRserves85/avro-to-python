@@ -24,6 +24,8 @@ def _create_reference(file: dict) -> dict:
     """
     if any([('name' not in file), ('namespace') not in file]):
         raise BadReferenceError
+    # if 'name' not in file:
+    #     raise BadReferenceError
 
     return Reference(
         name=file['name'],

@@ -28,6 +28,7 @@ def _enum_field(field: dict,
 
     will add field as a new file in the queue and will be referenced.
 
+
     Parameters
     ----------
         field: dict
@@ -39,7 +40,17 @@ def _enum_field(field: dict,
     -------
         Field
     """
-    field['type']['namespace'] = _get_namespace(obj=field['type'], parent_namespace=parent_namespace)
+    print(field)
+    if 'namespace' not in field['type']:
+        field['type']['namespace'] = ""
+    else:
+        field['type']['namespace'] = _get_namespace(obj=field['type'], parent_namespace=parent_namespace)
+
+
+    # if field['type']['namespace'] != parent_namespace:
+    #     field['type']['namespace'] = _get_namespace(obj=field['type'], parent_namespace=parent_namespace)
+    # else:
+    #     field['type']['namespace'] = ""
     reference = _create_reference(field['type'])
     references.append(reference)
 
