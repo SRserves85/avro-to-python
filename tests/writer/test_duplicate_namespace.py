@@ -27,9 +27,9 @@ class PathTests(unittest.TestCase):
         sys.path.append(self.write_path)
 
     def test_namespace_duplicate(self):
-        shutil.rmtree("/Users/ethanschwab/Documents/dev/avro-to-python/tests/avsc/namespace_duplicate_test/test/")
+        shutil.rmtree("tests/avsc/namespace_duplicate_test/test/")
         reader = AvscReader(
-            directory="/Users/ethanschwab/Documents/dev/avro-to-python/tests/avsc/namespace_duplicate_test")
+            directory="tests/avsc/namespace_duplicate_test")
         reader.read()
         writer = AvroWriter(
             reader.file_tree,
@@ -37,8 +37,8 @@ class PathTests(unittest.TestCase):
             author=None,
             package_version=None
         )
-        writer.write(root_dir="/Users/ethanschwab/Documents/dev/avro-to-python/tests/avsc/namespace_duplicate_test/test/")
+        writer.write(root_dir="tests/avsc/namespace_duplicate_test/test/")
         del reader
         self.assertFalse(
-            os.path.isfile("/Users/ethanschwab/Documents/dev/avro-to-python/tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/unique/Common.py"))
+            os.path.isfile("tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/unique/Common.py"))
         return 0

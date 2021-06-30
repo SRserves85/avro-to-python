@@ -5,5 +5,21 @@
   "fields" : [ {
     "name" : "uuid",
     "type" : "string"
-  } ]
+  }, {
+        "name": "trace",
+        "type": [
+            "null",
+            {
+                "type": "record",
+                "name": "TraceContext",
+                "fields": [
+                    {
+                        "name": "traceId",
+                        "type": "string"
+                    }
+                ]
+            }
+        ],
+        "default": null
+    } ]
 }
