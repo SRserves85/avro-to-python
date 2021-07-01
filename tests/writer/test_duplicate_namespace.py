@@ -41,4 +41,13 @@ class PathTests(unittest.TestCase):
         del reader
         self.assertFalse(
             os.path.isfile("tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/unique/Common.py"))
+        self.assertTrue(
+            os.path.isfile("tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/unique/UniqueEnum.py")
+        )
+        self.assertTrue(
+            os.path.isfile("tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/common/TraceContext.py")
+        )
+        self.assertTrue(
+            os.path.isfile("tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/common/enums/CommonEnum.py")
+        )
         return 0
