@@ -40,12 +40,7 @@ def _enum_field(field: dict,
     -------
         Field
     """
-    # if 'namespace' not in field['type']:
-    #     field['type']['namespace'] = ""
-    # else:
     field['type']['namespace'] = _get_namespace(obj=field['type'], parent_namespace=parent_namespace)
-
-
     reference = _create_reference(field['type'])
     references.append(reference)
 

@@ -5,7 +5,7 @@ from typing import Union
 
 class Reference(object):
 
-    def __init__(self, name: str, namespace: str=""):
+    def __init__(self, name: str, namespace: str):
         """
             Base struct on Reference Class
         """

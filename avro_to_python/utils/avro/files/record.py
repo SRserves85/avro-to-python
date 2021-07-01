@@ -70,7 +70,6 @@ def _record_file(file: File, item: dict, queue: List[dict]) -> None:
         elif fieldtype == 'enum':
             field = _enum_field(
                 field=field,
-                # parent_namespace=file.namespace,
                 parent_namespace=_get_namespace(field['type'], file.namespace),
                 queue=queue,
                 references=references
