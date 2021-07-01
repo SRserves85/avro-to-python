@@ -28,7 +28,6 @@ def _enum_field(field: dict,
 
     will add field as a new file in the queue and will be referenced.
 
-
     Parameters
     ----------
         field: dict
