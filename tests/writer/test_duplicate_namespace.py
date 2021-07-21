@@ -27,7 +27,8 @@ class PathTests(unittest.TestCase):
         sys.path.append(self.write_path)
 
     def test_namespace_duplicate(self):
-        shutil.rmtree("tests/avsc/namespace_duplicate_test/test/")
+        if os.path.isdir("tests/avsc/namespace_duplicate_test/test/"):
+            shutil.rmtree("tests/avsc/namespace_duplicate_test/test/")
         reader = AvscReader(
             directory="tests/avsc/namespace_duplicate_test")
         reader.read()
