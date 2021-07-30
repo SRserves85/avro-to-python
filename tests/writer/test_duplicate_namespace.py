@@ -30,7 +30,7 @@ class PathTests(unittest.TestCase):
         if os.path.isdir("tests/avsc/namespace_duplicate_test/test/"):
             shutil.rmtree("tests/avsc/namespace_duplicate_test/test/")
         reader = AvscReader(
-            directory="tests/avsc/namespace_duplicate_test")
+            directory=self.source)
         reader.read()
         writer = AvroWriter(
             reader.file_tree,
