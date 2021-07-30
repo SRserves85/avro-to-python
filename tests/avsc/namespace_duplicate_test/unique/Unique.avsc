@@ -1,0 +1,80 @@
+{
+  "type" : "record",
+  "name" : "Unique",
+  "namespace" : "namespace_duplicate_test.unique",
+  "fields" : [ {
+    "name" : "common",
+    "type" : {
+      "type" : "record",
+      "name" : "Common",
+      "namespace" : "namespace_duplicate_test.common",
+      "fields" : [ {
+        "name" : "uuid",
+        "type" : "string"
+      }, {
+        "name": "trace",
+        "type": [
+            "null",
+            {
+                "type": "record",
+                "name": "TraceContext",
+                "fields": [
+                    {
+                        "name": "traceId",
+                        "type": "string"
+                    }
+                ]
+            }
+        ],
+        "default": null
+        }]
+    }
+  }, {
+    "name" : "common",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "Common",
+      "namespace" : "namespace_duplicate_test.common",
+      "fields" : [ {
+        "name" : "uuid",
+        "type" : "string"
+      }, {
+        "name": "trace",
+        "type": [
+            "null",
+            {
+                "type": "record",
+                "name": "TraceContext",
+                "fields": [
+                    {
+                        "name": "traceId",
+                        "type": "string"
+                    }
+                ]
+            }
+        ],
+        "default": null
+        } ]
+    } ],
+    "default" : null
+  }, {
+    "name" : "commonenum",
+    "type" : {
+      "type" : "enum",
+      "name" : "CommonEnum",
+      "symbols" : [  "TEST_VAL1","TEST_VAL2","OUTDATED_SCHEMA" ],
+      "default" : "OUTDATED_SCHEMA",
+      "namespace": "namespace_duplicate_test.common.enums"
+    }
+  }, {
+    "name" : "uniqueenum",
+    "type" : {
+      "type" : "enum",
+      "name" : "UniqueEnum",
+      "symbols" : [  "TEST_VAL1","TEST_VAL2","OUTDATED_SCHEMA"],
+      "default" : "OUTDATED_SCHEMA"
+    }
+  }],
+    "default" : null
+}
+

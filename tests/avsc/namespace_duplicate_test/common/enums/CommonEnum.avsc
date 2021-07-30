@@ -1,0 +1,7 @@
+{
+  "type" : "enum",
+  "name" : "CommonEnum",
+  "namespace" : "namespace_duplicate_test.common.enums",
+  "symbols" : [  "TEST_VAL1","TEST_VAL2","OUTDATED_SCHEMA"],
+  "default" : "OUTDATED_SCHEMA"
+}
