@@ -87,6 +87,14 @@ def _union_field(field: dict,
                 references=references
             ))
 
+        elif field_type == 'map':
+            kwargs['union_types'].append(_map_field(
+                field={'name': 'uniontype', 'type': typ},
+                parent_namespace=parent_namespace,
+                queue=queue,
+                references=references
+            ))
+
         # references to previously defined complex types
         # handle reference types
         elif field_type == 'reference':
