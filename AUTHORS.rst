@@ -10,4 +10,7 @@ Development Lead
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Chas DeVeas <https://github.com/chasdevs>
+* Ivan isenilov <https://github.com/isenilov>
+* Ethan Schwab <https://github.com/ethan-schwab>
+* Alejandro Jaramillo <https://github.com/irux>
