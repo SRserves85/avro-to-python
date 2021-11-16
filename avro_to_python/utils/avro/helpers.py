@@ -95,6 +95,9 @@ def get_union_types(
         elif obj.fieldtype == 'array':
             out_types.append('list')
 
+        elif obj.fieldtype == 'map':
+            out_types.append('dict')
+
         else:
             raise ValueError('unsupported type')
 

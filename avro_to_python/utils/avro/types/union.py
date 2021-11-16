@@ -10,6 +10,7 @@ from avro_to_python.utils.avro.types.reference import _reference_type
 from avro_to_python.utils.avro.types.enum import _enum_field
 from avro_to_python.utils.avro.types.record import _record_field
 from avro_to_python.utils.avro.types.array import _array_field
+from avro_to_python.utils.avro.types.map import _map_field
 from avro_to_python.utils.avro.helpers import _get_namespace
 
 
@@ -81,6 +82,14 @@ def _union_field(field: dict,
         # nested complex record
         elif field_type == 'enum':
             kwargs['union_types'].append(_enum_field(
+                field={'name': 'uniontype', 'type': typ},
+                parent_namespace=parent_namespace,
+                queue=queue,
+                references=references
+            ))
+
+        elif field_type == 'map':
+            kwargs['union_types'].append(_map_field(
                 field={'name': 'uniontype', 'type': typ},
                 parent_namespace=parent_namespace,
                 queue=queue,

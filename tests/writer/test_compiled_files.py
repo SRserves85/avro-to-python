@@ -203,7 +203,7 @@ class PathTests(unittest.TestCase):
 
         data1 = {'optionalString': 'hello', 'intOrThing': Thing({'id': 2}), 'nullOrThingArray': None}
         data2 = {'optionalString': 'hello', 'intOrThing': {'id': 2}}
-        data3 = {'optionalString': None, 'intOrThing': 10, 'nullOrThingArray': [{'id': 2}]}
+        data3 = {'optionalString': None, 'intOrThing': 10, 'nullOrThingArray': [{'id': 2}], 'nullOrMap': {'value': 0.1}}
         data4 = {'optionalString': 'hello', 'intOrThing': 'not int or thing'}
 
         record1 = RecordWithUnion(data1)
@@ -211,7 +211,7 @@ class PathTests(unittest.TestCase):
         record3 = RecordWithUnion(data3)
 
         self.assertEqual(
-            '{"optionalString": "hello", "intOrThing": {"id": 2}, "nullOrThingArray": null}',
+            '{"optionalString": "hello", "intOrThing": {"id": 2}, "nullOrThingArray": null, "nullOrMap": null}',
             record1.serialize()
         )
 
@@ -237,7 +237,7 @@ class PathTests(unittest.TestCase):
 
         self.assertEqual(
             record3.serialize(),
-            '{"optionalString": null, "intOrThing": 10, "nullOrThingArray": [{"id": 2}]}'
+            '{"optionalString": null, "intOrThing": 10, "nullOrThingArray": [{"id": 2}], "nullOrMap": {"value": 0.1}}'
         )
 
         with self.assertRaises(TypeError):
