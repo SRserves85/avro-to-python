@@ -3,6 +3,7 @@
 from typing import Tuple
 
 from avro_to_python.classes.field import Field
+from avro_to_python.utils.avro.types.map import _map_field
 
 from avro_to_python.utils.avro.types.type_factory import _get_field_type
 from avro_to_python.utils.avro.types.primitive import _primitive_type
