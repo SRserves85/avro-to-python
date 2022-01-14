@@ -106,7 +106,6 @@ def _union_field(field: dict,
             ))
 
         else:
-            import pdb; pdb.set_trace()
             raise ValueError(
                 f"avro type {field['items']['type']} is not supported"
             )
