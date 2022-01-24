@@ -1,0 +1,16 @@
+{
+  "type" : "record",
+  "name" : "ContentGroup",
+  "namespace" : "records.nested",
+  "fields" : [ {
+    "name" : "group",
+    "type" : "int"
+  }, {
+    "name" : "isUserApproved",
+    "type" : [ "null", "boolean" ],
+    "default" : null
+  }, {
+    "name" : "index",
+    "type" : [ "null", "int" ]
+  } ]
+}

@@ -1,0 +1,27 @@
+{
+  "type" : "record",
+  "name" : "FakeContentMeta",
+  "namespace" : "records.nested",
+  "fields" : [ {
+    "name" : "categories",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "ContentGroup",
+        "fields" : [ {
+          "name" : "group",
+          "type" : "int"
+        }, {
+          "name" : "isUserApproved",
+          "type" : [ "null", "boolean" ],
+          "default" : null
+        }, {
+          "name" : "index",
+          "type" : [ "null", "int" ]
+        } ]
+      }
+    } ],
+    "default" : null
+  } ]
+}

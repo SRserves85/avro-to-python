@@ -1,11 +1,16 @@
 """ class to test reading of various avro formats """
 
+import copy
 import os
 import unittest
+from unittest.mock import patch
 
 import avro_to_python
+from avro_to_python.classes.file import File
 from avro_to_python.reader.read import AvscReader
 from avro_to_python.utils.paths import get_joined_path
+from avro_to_python.utils.avro.types.array import _array_field
+from avro_to_python.utils.avro.types.reference import _reference_type
 
 
 class AvroReaderTests(unittest.TestCase):
@@ -334,3 +339,13 @@ class AvroReaderTests(unittest.TestCase):
             file.fields['mappedThingArray'].map_type.array_item_type.fieldtype,
             'reference'
         )
+
+    def testFakeContentEvent(self):
+        with patch('avro_to_python.utils.avro.types.array._reference_type') as patched_func:
+            filepath = self.directory + '/FakeContentEvent.avsc'
+            reader = AvscReader(file=filepath)
+            reader.read()
+
+        correct_field = {'name': 'ContentGroup', 'type': 'records.nested'}
+        correct_references = []
+        patched_func.assert_called_with(field=correct_field, references=correct_references)

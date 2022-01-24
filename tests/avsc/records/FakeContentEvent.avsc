@@ -1,0 +1,52 @@
+{
+  "type" : "record",
+  "name" : "FakeContentEvent",
+  "namespace" : "records",
+  "fields" : [ {
+    "name" : "fakeContentMeta",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "FakeContentMeta",
+      "namespace" : "records.nested",
+      "fields" : [ {
+        "name" : "categories",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : {
+            "type" : "record",
+            "name" : "ContentGroup",
+            "fields" : [ {
+              "name" : "group",
+              "type" : "int"
+            }, {
+              "name" : "isUserApproved",
+              "type" : [ "null", "boolean" ],
+              "default" : null
+            }, {
+              "name" : "index",
+              "type" : [ "null", "int" ]
+            } ]
+          }
+        } ],
+        "default" : null
+      } ]
+    } ],
+    "default" : null
+  }, {
+    "name" : "fakeContentDataScienceMeta",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "FakeContentDataScienceMeta",
+      "namespace" : "records.nested",
+      "fields" : [ {
+        "name" : "dsCategories",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : "ContentGroup"
+        } ],
+        "default" : null
+      } ]
+    } ],
+    "default" : null
+  } ]
+}
