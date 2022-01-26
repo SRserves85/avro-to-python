@@ -1,0 +1,16 @@
+{
+  "type" : "record",
+  "name" : "CommonReference",
+  "namespace" : "records.nested",
+  "fields" : [ {
+    "name" : "group",
+    "type" : "int"
+  }, {
+    "name" : "isApproved",
+    "type" : [ "null", "boolean" ],
+    "default" : null
+  }, {
+    "name" : "index",
+    "type" : [ "null", "int" ]
+  } ]
+}

@@ -83,7 +83,7 @@ def _array_field(field: dict,
     elif field_item_type == 'reference':
         kwargs.update({
             'array_item_type': _reference_type(
-                field={'name': field['type']['items']['type']},
+                field={'name': field['type']['items']['type'], 'type': parent_namespace},
                 references=references)
         })
 

@@ -1,0 +1,27 @@
+{
+  "type" : "record",
+  "name" : "NestedUnion2",
+  "namespace" : "records.nested",
+  "fields" : [ {
+    "name" : "categories2",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "CommonReference",
+        "fields" : [ {
+          "name" : "group",
+          "type" : "int"
+        }, {
+          "name" : "isApproved",
+          "type" : [ "null", "boolean" ],
+          "default" : null
+        }, {
+          "name" : "index",
+          "type" : [ "null", "int" ]
+        } ]
+      }
+    } ],
+    "default" : null
+  } ]
+}
