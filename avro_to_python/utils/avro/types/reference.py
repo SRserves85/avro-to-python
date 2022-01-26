@@ -29,7 +29,7 @@ def _reference_type(field: dict, references: list) -> Field:
 
     # should only happen with array field references
     if not reference:
-        namespace, name = split_namespace(field['type'])
+        namespace, name = split_namespace(f"{field['type']}.{field['name']}")
         reference = Reference(name=name, namespace=namespace)
         references.append(reference)
 
