@@ -340,12 +340,12 @@ class AvroReaderTests(unittest.TestCase):
             'reference'
         )
 
-    def testFakeContentEvent(self):
+    def testRecordWithNestedUnion(self):
         with patch('avro_to_python.utils.avro.types.array._reference_type') as patched_func:
-            filepath = self.directory + '/FakeContentEvent.avsc'
+            filepath = self.directory + '/RecordWithNestedUnion.avsc'
             reader = AvscReader(file=filepath)
             reader.read()
 
-        correct_field = {'name': 'ContentGroup', 'type': 'records.nested'}
+        correct_field = {'name': 'CommonReference', 'type': 'records.nested'}
         correct_references = []
         patched_func.assert_called_with(field=correct_field, references=correct_references)
