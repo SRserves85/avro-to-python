@@ -1,12 +1,12 @@
 {
   "type" : "record",
-  "name" : "ContentGroup",
+  "name" : "CommonReference",
   "namespace" : "records.nested",
   "fields" : [ {
     "name" : "group",
     "type" : "int"
   }, {
-    "name" : "isUserApproved",
+    "name" : "isApproved",
     "type" : [ "null", "boolean" ],
     "default" : null
   }, {

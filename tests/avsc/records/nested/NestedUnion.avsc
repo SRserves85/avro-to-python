@@ -1,6 +1,6 @@
 {
   "type" : "record",
-  "name" : "FakeContentMeta",
+  "name" : "NestedUnion",
   "namespace" : "records.nested",
   "fields" : [ {
     "name" : "categories",
@@ -8,12 +8,12 @@
       "type" : "array",
       "items" : {
         "type" : "record",
-        "name" : "ContentGroup",
+        "name" : "CommonReference",
         "fields" : [ {
           "name" : "group",
           "type" : "int"
         }, {
-          "name" : "isUserApproved",
+          "name" : "isApproved",
           "type" : [ "null", "boolean" ],
           "default" : null
         }, {

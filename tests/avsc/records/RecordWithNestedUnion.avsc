@@ -1,12 +1,12 @@
 {
   "type" : "record",
-  "name" : "FakeContentEvent",
+  "name" : "RecordWithNestedUnion",
   "namespace" : "records",
   "fields" : [ {
-    "name" : "fakeContentMeta",
+    "name" : "nestedUnion",
     "type" : [ "null", {
       "type" : "record",
-      "name" : "FakeContentMeta",
+      "name" : "NestedUnion",
       "namespace" : "records.nested",
       "fields" : [ {
         "name" : "categories",
@@ -14,12 +14,12 @@
           "type" : "array",
           "items" : {
             "type" : "record",
-            "name" : "ContentGroup",
+            "name" : "CommonReference",
             "fields" : [ {
               "name" : "group",
               "type" : "int"
             }, {
-              "name" : "isUserApproved",
+              "name" : "isApproved",
               "type" : [ "null", "boolean" ],
               "default" : null
             }, {
@@ -33,16 +33,16 @@
     } ],
     "default" : null
   }, {
-    "name" : "fakeContentDataScienceMeta",
+    "name" : "nestedUnion2",
     "type" : [ "null", {
       "type" : "record",
-      "name" : "FakeContentDataScienceMeta",
+      "name" : "NestedUnion2",
       "namespace" : "records.nested",
       "fields" : [ {
-        "name" : "dsCategories",
+        "name" : "categories2",
         "type" : [ "null", {
           "type" : "array",
-          "items" : "ContentGroup"
+          "items" : "CommonReference"
         } ],
         "default" : null
       } ]
