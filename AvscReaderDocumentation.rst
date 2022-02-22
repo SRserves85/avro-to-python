@@ -9,7 +9,8 @@ Overview
 * read and serialize .avsc file into JSON object and append it to a list stored in the reader
 * build a namespace tree where each node in the tree has a name, a dictionary of file objects, and a dictionary of children nodes
     * each node represents a namespace; in the ``RecordWithNestedUnion`` test example, the namespace tree that is ultimately built consists of a root node, a child of the root node named ``records``, and a child of ``records`` named ``nested``
-* Once the namespace tree has been built, it is passed to the ``AvroWriter`` class. This class traverses the tree and writes the information in each node's file objects to Python files as Python classes
+
+Once the namespace tree has been built, it is passed to the ``AvroWriter`` class. This class traverses the tree and writes the information in each node's file objects to Python files as Python classes.
 
 Building Namespace Tree From .avsc Files with AvscReader
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
