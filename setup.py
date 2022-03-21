@@ -11,38 +11,39 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Jinja2==2.10.3', 'Click==7.0']
+requirements = ['Jinja2==2.10.3', 'Click==7.0', 'MarkupSafe==2.0.1']
 
 test_requirements = [
-    'pip==19.2.3',
-    'bump2version==0.5.11',
-    'wheel==0.33.6',
-    'watchdog==0.9.0',
-    'flake8==3.7.8',
-    'tox==3.14.0',
-    'coverage==4.5.4',
-    'Sphinx==1.8.5',
-    'twine==1.14.0',
-    'Click==7.0',
-    'pytest==4.6.5',
-    'pytest-runner==5.1',
-    'Jinja2==2.10.3'
+    'pip==22.0.4',
+    'bump2version==1.0.1',
+    'wheel==0.37.1',
+    'watchdog==2.1.6',
+    'flake8==4.0.1',
+    'tox==3.24.5',
+    'coverage==6.3.2',
+    'Sphinx==4.4.0',
+    'twine==3.8.0',
+    'Click==8.0.4',
+    'pytest==7.1.1',
+    'pytest-runner==6.0.0',
+    'Jinja2==3.0.3',
+    'MarkupSafe==2.0.1'
 ]
 
 setup(
     author="Scott Rothbarth",
     author_email='srserves85@gmail.com',
-    python_requires='>3.5, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*',
+    python_requires='>3.6',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10'
     ],
     description="avro-to-python is a light tool for compiling avro schema files (.avsc) to python classes making using avro schemata easy.",
     entry_points={
@@ -60,6 +61,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/srserves85/avro-to-python',
-    version='0.3.3',
+    version='1.0.0',
     zip_safe=False,
 )
