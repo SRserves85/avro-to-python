@@ -61,6 +61,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/srserves85/avro-to-python',
-    version='1.0.0',
+    version='1.0.1',
     zip_safe=False,
 )

@@ -1,0 +1,16 @@
+{
+  "type" : "record",
+  "name" : "RecordWithArrayOfMap",
+  "namespace" : "records",
+  "fields" : [ {
+    "name" : "things",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "map",
+        "values" : "string"
+      }
+    },
+    "default" : [ ]
+  } ]
+}

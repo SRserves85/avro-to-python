@@ -271,6 +271,32 @@ class AvroReaderTests(unittest.TestCase):
             'reference'
         )
 
+    def testRecordWithArrayOrMap(self):
+        filepath = self.directory + '/RecordWithArrayOfMap.avsc'
+
+        reader = AvscReader(file=filepath)
+        reader.read()
+
+        obj = reader.file_tree
+
+        # should have 1 fields
+        self.assertEqual(
+            len(obj.children['records'].files['RecordWithArrayOfMap'].fields),
+            1
+        )
+
+        # field should be of type reference
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArrayOfMap'].fields['things'].array_item_type.fieldtype,  # NOQA
+            'map'
+        )
+
+        # map field should be of type primitive
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArrayOfMap'].fields['things'].array_item_type.map_type.fieldtype,  # NOQA
+            'primitive'
+        )
+
     def testRecordWithMap(self):
         filepath = self.directory + '/RecordWithMap.avsc'
 

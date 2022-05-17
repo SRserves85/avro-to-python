@@ -14,6 +14,8 @@
                     raise TypeError(
                         "Type for '{{name}}' should be '{{primitive_type_map[field.array_item_type.fieldtype]}}'"
                     )
+                {%- elif field.array_item_type.fieldtype == 'map'%}
+                self.{{name}}.append(element)
                 {%- endif %}
         else:
             raise TypeError("Field '{{name}}' should be type list")
