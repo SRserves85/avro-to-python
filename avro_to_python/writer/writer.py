@@ -101,7 +101,7 @@ class AvroWriter(object):
             self.root_dir += '/' + self.pip + '/' + self.pip.replace('-', '_')
             self.pip = self.pip.replace('-', '_')
         else:
-            self.pip_import = ''
+            self.pip_import = '..'
         get_or_create_path(self.root_dir)
         self._write_helper_file()
 
