@@ -82,15 +82,15 @@ If you run the above on a valid avro avsc file, you should then be able to impor
 
     record = RecordClass({'foo': True, 'bar': 'true', 'baz': 10, 'food': 'CHOCOLATE'})
 
-Tips: To generate classes in a subpackage of your existing application set the "--top_level_package" flags to *..* value:
+Tips: To generate classes in a subpackage of your existing application set the "--top_level_package" flags to your subpackage name:
 
 .. code-block:: bash
 
-    avro-to-python [path_to_source_avsc_files] [path_to_mysubpackage_directory] --top_level_package ..
+    avro-to-python [path_to_source_avsc_files] [path_to_my_subpackage_directory] --top_level_package my.subpackage
 
 .. code-block:: python
 
-    from mysubpackage.name.space import RecordClass
+    from my.subpackage.name.space import RecordClass
 
     record = RecordClass({'foo': True, 'bar': 'true', 'baz': 10, 'food': 'CHOCOLATE'})
 
