@@ -105,10 +105,10 @@ class AvroWriter(object):
         root_dir = get_system_path(root_dir)
         if self.pip:
             self.root_dir = os.path.join(root_dir, self.pip)
-            self.top_level_package_dir = os.path.join(self.root_dir, self.top_level_package)
         else:
             self.root_dir = root_dir
-            self.top_level_package_dir = self.root_dir
+
+        self.top_level_package_dir = os.path.join(self.root_dir, self.top_level_package.replace(".", os.sep))
 
         if self.top_level_package:
             self.pip_import = self.top_level_package + "."
