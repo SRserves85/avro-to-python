@@ -1,6 +1,7 @@
 """ Writer class for writing python avro files """
 
 import json
+import os
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -52,7 +53,7 @@ class AvroWriter(object):
     root_dir = None
     files = []
 
-    def __init__(self, tree: dict, pip: str=None, author: str=None,
+    def __init__(self, tree: dict, pip: str=None, top_level_package: str=None, author: str=None,
                  package_version: str=None) -> None:
         """ Parses tree structured dictionaries into python files
 
@@ -73,6 +74,14 @@ class AvroWriter(object):
         TODO: Check tree is valid
         """
         self.pip = pip
+        if self.pip:
+            self.top_level_package = pip.replace('-', '_')
+        else:
+            self.top_level_package = ''
+
+        if top_level_package:
+            self.top_level_package = top_level_package
+
         self.author = author
         self.package_version = package_version
         self.tree = tree
@@ -93,16 +102,20 @@ class AvroWriter(object):
         -------
             None
         """
-
-        self.root_dir = get_system_path(root_dir)
+        root_dir = get_system_path(root_dir)
         if self.pip:
-            self.pip_import = self.pip.replace('-', '_') + '.'
-            self.pip_dir = self.root_dir + '/' + self.pip
-            self.root_dir += '/' + self.pip + '/' + self.pip.replace('-', '_')
-            self.pip = self.pip.replace('-', '_')
+            self.root_dir = os.path.join(root_dir, self.pip)
         else:
-            self.pip_import = '..'
-        get_or_create_path(self.root_dir)
+            self.root_dir = root_dir
+
+        self.top_level_package_dir = os.path.join(self.root_dir, self.top_level_package)
+
+        if self.top_level_package:
+            self.pip_import = self.top_level_package + "."
+        else:
+            self.pip_import = ''
+
+        get_or_create_path(self.top_level_package_dir)
         self._write_helper_file()
 
         self._reset_tree()
@@ -115,7 +128,7 @@ class AvroWriter(object):
 
     def _write_manifest_file(self) -> None:
         """ writes manifest to recursively include packages """
-        filepath = self.pip_dir + '/MANIFEST.in'
+        filepath = self.root_dir + '/MANIFEST.in'
         template = self.template_env.get_template('files/manifest.j2')
         filetext = template.render(
             pip = self.pip
@@ -125,7 +138,7 @@ class AvroWriter(object):
 
     def _write_setup_file(self) -> None:
         """ writes the setup.py file to the pip dir"""
-        filepath = self.pip_dir + '/setup.py'
+        filepath = self.root_dir + '/setup.py'
         template = self.template_env.get_template('files/setup.j2')
         filetext = template.render(
             pip=self.pip,
@@ -137,7 +150,7 @@ class AvroWriter(object):
 
     def _write_pip_init_file(self) -> None:
         """ writes the __init__ file to the pip dir"""
-        filepath = self.pip_dir + '/' + self.pip + '/__init__.py'
+        filepath = self.top_level_package_dir + '/__init__.py'
         template = self.template_env.get_template('files/pip_init.j2')
         filetext = template.render(
             pip=self.pip,
@@ -149,7 +162,7 @@ class AvroWriter(object):
 
     def _write_helper_file(self) -> None:
         """ writes the helper file to the root dir """
-        filepath = self.root_dir + '/helpers.py'
+        filepath = self.top_level_package_dir + '/helpers.py'
         template = self.template_env.get_template('files/helpers.j2')
         filetext = template.render()
         with open(filepath, 'w') as f:
@@ -163,10 +176,10 @@ class AvroWriter(object):
             pip_import=self.pip_import
         )
         verify_or_create_namespace_path(
-            rootdir=self.root_dir,
+            rootdir=self.top_level_package_dir,
             namespace=namespace
         )
-        filepath = self.root_dir + namespace.replace('.', '/') + '/' + '__init__.py'  # NOQA
+        filepath = self.top_level_package_dir + namespace.replace('.', '/') + '/' + '__init__.py'  # NOQA
         with open(filepath, 'w') as f:
             f.write(filetext)
 
@@ -176,10 +189,10 @@ class AvroWriter(object):
         """ writes python filetext to appropriate namespace
         """
         verify_or_create_namespace_path(
-            rootdir=self.root_dir,
+            rootdir=self.top_level_package_dir,
             namespace=namespace
         )
-        filepath = self.root_dir + namespace.replace('.', '/') + '/' + filename + '.py'  # NOQA
+        filepath = self.top_level_package_dir + namespace.replace('.', '/') + '/' + filename + '.py'  # NOQA
         with open(filepath, 'w') as f:
             f.write(filetext)
 

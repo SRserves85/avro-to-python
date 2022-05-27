@@ -59,6 +59,7 @@ To use the cli, here is the available cli commands:
     avro-to-python [source] [target]
         Options:
             --pip TEXT              make package pip installable using this name
+            --top_level_package     override top level package name (optional)
             --author TEXT           author name of the pip installable package
             --package_version TEXT  version of the pip intallable package  [default: 0.1.0]
             --help                  Show this message and exit
@@ -81,6 +82,17 @@ If you run the above on a valid avro avsc file, you should then be able to impor
 
     record = RecordClass({'foo': True, 'bar': 'true', 'baz': 10, 'food': 'CHOCOLATE'})
 
+Tips: To generate classes in a subpackage of your existing application set the "--top_level_package" flags to *..* value:
+
+.. code-block:: bash
+
+    avro-to-python [path_to_source_avsc_files] [path_to_mysubpackage_directory] --top_level_package ..
+
+.. code-block:: python
+
+    from mysubpackage.name.space import RecordClass
+
+    record = RecordClass({'foo': True, 'bar': 'true', 'baz': 10, 'food': 'CHOCOLATE'})
 
 CLI (with --pip)
 ----------------
@@ -100,6 +112,18 @@ Now that you have the package installed, you can import it by it's package name 
 .. code-block:: python
 
     from test_avro.name.space import RecordClass
+
+    record = RecordClass({'foo': True, 'bar': 'true', 'baz': 10, 'food': 'CHOCOLATE'})
+
+You can customize the top level package name *test_avro*, modifying the "--top_level_package" flags:
+
+.. code-block:: bash
+
+    avro-to-python [path_to_source_avsc_files] [path_to_target_directory] --pip test_avro --top_level_package event
+
+.. code-block:: python
+
+    from event.name.space import RecordClass
 
     record = RecordClass({'foo': True, 'bar': 'true', 'baz': 10, 'food': 'CHOCOLATE'})
 
