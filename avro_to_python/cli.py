@@ -20,9 +20,10 @@ VERSION_HELP = 'version of the pip intallable package'
 @click.argument('source', type=Path(), default=None)
 @click.argument('target', type=Path(), default=None)
 @click.option('--pip', type=str, default=None, required=False, show_default=True, help=PIP_HELP)  # NOQA
+@click.option('--top_level_package', type=str, default=None, required=False, show_default=True, help=PIP_HELP)  # NOQA
 @click.option('--author', type=str, default=None, required=False, show_default=True, help=AUTHOR_HELP)  # NOQA
 @click.option('--package_version', type=str, default='0.1.0', required=False, show_default=True, help=VERSION_HELP)  # NOQA
-def main(source, target, pip=None, author=None, package_version=None):
+def main(source, target, pip=None, top_level_package=None, author=None, package_version=None):
     """avro-to-python: compile avro avsc schemata to python classes
     """
 
@@ -34,6 +35,7 @@ def main(source, target, pip=None, author=None, package_version=None):
     writer = AvroWriter(
         reader.file_tree,
         pip=pip,
+        top_level_package=top_level_package,
         author=author,
         package_version=package_version
     )
