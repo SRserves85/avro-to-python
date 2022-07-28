@@ -31,10 +31,37 @@ def _create_reference(file: dict) -> dict:
     )
 
 
-def _get_namespace(obj: dict, parent_namespace: str=None) -> None:
+def _get_name(obj: dict) -> str:
+    """ Fetches the non-fullname of the node, if one exist.
+
+    Only named types should have the name key.
+    This function doesn't check that but will raise ValueError
+    if name isn't set.
+    If the name is a fullname, the name part is returned.
+    Otherwise the set name is returned.
+
+
+    Parameters
+    ----------
+        obj: dict
+            serialized object resembling an avsc schema
+
+    Returns
+    -------
+        String name or empty string.
+    """
+    (namespace, _, name) = obj['name'].rpartition(".")
+    if namespace and name:
+        return name
+    return obj['name']
+
+def _get_namespace(obj: dict, parent_namespace: str=None) -> str:
     """ imputes the namespace if it doesn't already exist
 
     Namespaces follow the following chain of logic:
+        - If name is a fullname, use the namespace part.
+          This is how the Java avro-tools jar behaves, which is used
+          as a reference implementation.
         - Use a namespace if it exists
         - If no namespace is given:
             - If referenced in a schema, inherit the same namespace as  parent
@@ -51,8 +78,11 @@ def _get_namespace(obj: dict, parent_namespace: str=None) -> None:
 
     Returns
     -------
-        None
+        String namespace or empty string.
     """
+    (namespace, _, name) = obj.get('name', '').rpartition(".")
+    if namespace and name:
+        return namespace
     if obj.get('namespace', None):
         return obj['namespace']
     elif parent_namespace:

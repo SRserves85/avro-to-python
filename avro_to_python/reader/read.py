@@ -14,7 +14,7 @@ from avro_to_python.utils.exceptions import (
     NoFileOrDir, MissingFileError, NoFilesError
 )
 
-from avro_to_python.utils.avro.helpers import _get_namespace
+from avro_to_python.utils.avro.helpers import _get_name, _get_namespace
 from avro_to_python.utils.avro.files.enum import _enum_file
 from avro_to_python.utils.avro.files.record import _record_file
 
@@ -139,8 +139,9 @@ class AvscReader(object):
             # get first item in queue
             item = queue.pop(0)
 
-            # impute namespace
+            # impute namespace and name
             item['namespace'] = _get_namespace(item)
+            item['name'] = _get_name(item)
 
             # traverse to namespace starting from root_node
             current_node = self._traverse_tree(
