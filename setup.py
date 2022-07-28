@@ -14,7 +14,7 @@ with open('HISTORY.rst') as history_file:
 requirements = ['Jinja2>=2.10.3', 'Click>=7.0,<=8.0']
 
 test_requirements = [
-    'pip==19.2.3',
+    'pip==21.1',
     'bump2version==0.5.11',
     'wheel==0.33.6',
     'watchdog==0.9.0',
