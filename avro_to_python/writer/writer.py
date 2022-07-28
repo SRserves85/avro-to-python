@@ -159,7 +159,7 @@ class AvroWriter(object):
         """ writes __init__.py files for namespace imports"""
         template = self.template_env.get_template('files/init.j2')
         filetext = template.render(
-            imports=imports,
+            imports=sorted(imports),
             pip_import=self.pip_import
         )
         verify_or_create_namespace_path(
