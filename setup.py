@@ -11,6 +11,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
+
 requirements = ['Jinja2==2.10.3', 'Click==7.0', 'MarkupSafe==2.0.1']
 
 test_requirements = [

@@ -22,9 +22,10 @@ class CliTests(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree('records', ignore_errors=True)
-        shutil.rmtree('test-avro', ignore_errors=True)
+        shutil.rmtree('test-pip', ignore_errors=True)
+        shutil.rmtree('test-top-level-package', ignore_errors=True)
 
-    def test_command_line_interface(self):
+    def test_cli_interface(self):
         """Test the CLI."""
         runner = CliRunner()
         result = runner.invoke(cli.main)
@@ -34,23 +35,23 @@ class CliTests(unittest.TestCase):
         assert help_result.exit_code == 0
         assert 'Show this message and exit.' in help_result.output
 
-    def test_pip_command_line(self):
+    def test_pip_cli(self):
         """ tests that the cli can make a non-pip run """
         runner = CliRunner()
-        args = [self.source, './', '--pip', 'test-avro']
+        args = [self.source, './', '--pip', 'test-pip']
         result = runner.invoke(cli.main, args)
         assert result.exit_code == 0
 
         # Install the package using -e for local
         subprocess.check_call(
-            [sys.executable, '-m', 'pip', 'install', '-e', './test-avro']
+            [sys.executable, '-m', 'pip', 'install', '-e', './test-pip']
         )
 
         # when pip installing, it isn't actually added to $PATH
-        sys.path.append('test-avro')
+        sys.path.append('test-pip')
 
         # import a namespace
-        from test_avro.records import RecordWithRecord
+        from test_pip.records import RecordWithRecord
 
         data1 = {'thing1': {'id': 10}, 'thing2': {'id': 0}}
         record1 = RecordWithRecord(data1)
@@ -61,6 +62,37 @@ class CliTests(unittest.TestCase):
         )
 
         subprocess.check_call(
-            [sys.executable, '-m', 'pip', 'uninstall', '-y', 'test-avro']
+            [sys.executable, '-m', 'pip', 'uninstall', '-y', 'test-pip']
+        )
+        del runner
+
+    def test_top_level_package_cli(self):
+        """ tests that the cli can make a non-pip run """
+        runner = CliRunner()
+        args = [self.source, './', '--pip', 'test-top-level-package', '--top_level_package', 'event']
+        result = runner.invoke(cli.main, args)
+        assert result.exit_code == 0
+
+        # Install the package using -e for local
+        subprocess.check_call(
+            [sys.executable, '-m', 'pip', 'install', '-e', './test-top-level-package']
+        )
+
+        # when pip installing, it isn't actually added to $PATH
+        sys.path.append('test-top-level-package')
+
+        # import a namespace
+        from event.records import RecordWithRecord
+
+        data1 = {'thing1': {'id': 10}, 'thing2': {'id': 0}}
+        record1 = RecordWithRecord(data1)
+
+        self.assertEqual(
+            json.dumps(data1),
+            record1.serialize()
+        )
+
+        subprocess.check_call(
+            [sys.executable, '-m', 'pip', 'uninstall', '-y', 'test-top-level-package']
         )
         del runner
