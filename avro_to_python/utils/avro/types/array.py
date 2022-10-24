@@ -61,23 +61,24 @@ def _array_field(field: dict,
         })
 
     # handle complex types
-    elif field_item_type == 'record':
-        # array fields don't have names and type need to be nested
-        kwargs.update({
-            'array_item_type': _record_field(
-                field={'name': 'arrayfield', 'type': field['type']['items'], 'namespace': field['type'].get('namespace', None)},
-                parent_namespace=parent_namespace,
-                queue=queue, references=references)
-        })
-
-    elif field_item_type == 'enum':
-        # array fields don't have names and type need to be nested
-        kwargs.update({
-            'array_item_type': _enum_field(
-                field={'name': 'arrayfield', 'type': field['type']['items'], 'namespace': field['type'].get('namespace', None)},
-                parent_namespace=parent_namespace,
-                queue=queue, references=references)
-        })
+    elif field_item_type in ['record', 'enum', 'map']:
+        if field_item_type == 'record':
+            _func = _record_field
+        elif field_item_type == 'enum':
+            _func = _enum_field
+        elif field_item_type == 'map':
+            # delayed importing to avoid circular dependency, may want to do
+            # the same in map.py
+            from avro_to_python.utils.avro.types.map import _map_field
+            _func = _map_field
+        else:
+            raise ValueError("you shouldn't have been able to get here")
+        kwargs.update({'array_item_type': _func(
+            field={'name': 'arrayfield',
+                   'type': field['type']['items'],
+                   'namespace': field['type'].get('namespace')},
+            parent_namespace=parent_namespace,
+            queue=queue, references=references)})
 
     # handle reference types
     elif field_item_type == 'reference':
