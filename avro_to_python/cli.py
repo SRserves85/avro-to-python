@@ -14,6 +14,7 @@ from avro_to_python.writer.writer import AvroWriter
 PIP_HELP = 'make package pip installable using this name'
 AUTHOR_HELP = 'author name of the pip installable package'
 VERSION_HELP = 'version of the pip intallable package'
+TEMPLATE_PATH_HELP = 'path to a folder containing templates for the output'
 
 
 @click.command()
@@ -23,7 +24,8 @@ VERSION_HELP = 'version of the pip intallable package'
 @click.option('--top_level_package', type=str, default=None, required=False, show_default=True, help=PIP_HELP)  # NOQA
 @click.option('--author', type=str, default=None, required=False, show_default=True, help=AUTHOR_HELP)  # NOQA
 @click.option('--package_version', type=str, default='0.1.0', required=False, show_default=True, help=VERSION_HELP)  # NOQA
-def main(source, target, pip=None, top_level_package=None, author=None, package_version=None):
+@click.option('--template_path', type=str, default=None, required=False, show_default=True, help=TEMPLATE_PATH_HELP)  # NOQA
+def main(source, target, pip=None, top_level_package=None, author=None, package_version=None, template_path=None):
     """avro-to-python: compile avro avsc schemata to python classes
     """
 
@@ -37,7 +39,8 @@ def main(source, target, pip=None, top_level_package=None, author=None, package_
         pip=pip,
         top_level_package=top_level_package,
         author=author,
-        package_version=package_version
+        package_version=package_version,
+        template_path=template_path
     )
     writer.write(root_dir=target)
     del reader

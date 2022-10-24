@@ -54,7 +54,7 @@ class AvroWriter(object):
     files = []
 
     def __init__(self, tree: dict, pip: str=None, top_level_package: str=None, author: str=None,
-                 package_version: str=None) -> None:
+                 package_version: str=None, template_path: str=None) -> None:
         """ Parses tree structured dictionaries into python files
 
         Parameters
@@ -87,7 +87,7 @@ class AvroWriter(object):
         self.tree = tree
 
         # jinja2 templates
-        self.template_env = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
+        self.template_env = Environment(loader=FileSystemLoader(template_path or TEMPLATE_PATH))
         self.template = self.template_env.get_template('baseTemplate.j2')
 
     def write(self, root_dir: str) -> None:
