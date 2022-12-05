@@ -1,6 +1,9 @@
 {%- block map %}
-    def set_{{name}}(self, values: list) -> None:
-
+    def set_{{name}}(self, values) -> None:
+        if isinstance(values, dict):
+            self.{{name}} = values
+            return
+            
         self.{{name}} = []
         if isinstance(values, list):
             for item in values:
@@ -60,6 +63,6 @@
         else:
             raise TypeError("Field '{{name}}' should be type list")
 
-    def get_{{name}}(self) -> list:
+    def get_{{name}}(self):
         return self.{{name}}
 {%- endblock -%}
