@@ -2,8 +2,11 @@
 class {{file.name}}(object):
 
     {% include 'partials/avroSchema.j2'|indent(-4) %}
-    def __init__(self, obj: Union[str, dict, '{{file.name}}']) -> None:
-        if isinstance(obj, str):
+    def __init__(self, obj: Union[str, dict, '{{file.name}}'] = None) -> None:
+        if obj is None:
+            return
+
+        elif isinstance(obj, str):
             obj = json.loads(obj)
 
         elif isinstance(obj, type(self)):
