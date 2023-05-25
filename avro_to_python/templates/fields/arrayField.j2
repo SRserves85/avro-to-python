@@ -1,6 +1,5 @@
 {%- block array %}
     def set_{{name}}(self, values: list) -> None:
-
         self.{{name}} = []
         if isinstance(values, list):
             for element in values:
@@ -14,7 +13,7 @@
                     raise TypeError(
                         "Type for '{{name}}' should be '{{primitive_type_map[field.array_item_type.fieldtype]}}'"
                     )
-                {%- elif field.array_item_type.fieldtype == 'map'%}
+                {%- elif field.array_item_type.fieldtype == 'map' or field.array_item_type.fieldtype == 'array'%}
                 self.{{name}}.append(element)
                 {%- endif %}
         else:

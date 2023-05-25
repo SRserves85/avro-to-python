@@ -163,9 +163,9 @@ class PathTests(unittest.TestCase):
         from records import RecordWithArray
         from records import Thing
 
-        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
-        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
-        data3 = {'things': [], 'numbers': [], 'things2': []}
+        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40], 'things2': [], 'twoDimDoubleArray': [[1.1, 2.2], [3.3, 4.5]], 'threeDimRecordArray': [[[{'id': 10}, {'id': 50}]]]}  # NOQA
+        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40], 'things2': [], 'twoDimDoubleArray': [[1.1, 2.2], [3.3, 4.5]], 'threeDimRecordArray': [[[Thing({'id': 10}), {'id': 50}]]]}  # NOQA
+        data3 = {'things': [], 'numbers': [], 'things2': [], 'twoDimDoubleArray': [], 'threeDimRecordArray': []}
         data4 = {'things': [{'id': 10}, {'id': 50}], 'numbers': ['not a long'], 'things2': []}  # NOQA
         data5 = {'things': [{'id': 'not a long'}, {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
 
@@ -181,7 +181,7 @@ class PathTests(unittest.TestCase):
 
         self.assertEqual(
             record3.serialize(),
-            '{"things": [], "numbers": [], "things2": []}'
+            '{"things": [], "numbers": [], "things2": [], "twoDimDoubleArray": [], "threeDimRecordArray": []}'
         )
 
         self.assertEqual(

@@ -61,7 +61,7 @@ def _array_field(field: dict,
         })
 
     # handle complex types
-    elif field_item_type in ['record', 'enum', 'map']:
+    elif field_item_type in ['record', 'enum', 'map', 'array']:
         if field_item_type == 'record':
             _func = _record_field
         elif field_item_type == 'enum':
@@ -71,6 +71,8 @@ def _array_field(field: dict,
             # the same in map.py
             from avro_to_python.utils.avro.types.map import _map_field
             _func = _map_field
+        elif field_item_type == 'array':
+            _func = _array_field
         else:
             raise ValueError("you shouldn't have been able to get here")
         kwargs.update({'array_item_type': _func(
