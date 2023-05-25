@@ -61,7 +61,7 @@ To use the cli, here is the available cli commands:
             --pip TEXT              make package pip installable using this name
             --top_level_package     override top level package name (optional)
             --author TEXT           author name of the pip installable package
-            --package_version TEXT  version of the pip intallable package  [default: 0.1.0]
+            --package_version TEXT  version of the pip installable package  [default: 0.1.0]
             --help                  Show this message and exit
 
 
@@ -130,7 +130,7 @@ You can customize the top level package name *test_avro*, modifying the "--top_l
 
 avro-to-python in a Script
 --------------------------
-You can also use the reader and writer packages in avro-to-python as you would any other python package. Avro to python is split between a *reader* and *writer* classes. avro-to-python treates namespaces as acyclic trees and uses depth first search to ensure no duplication or namespace collisions on read and write. An example useage is below:
+You can also use the reader and writer packages in avro-to-python as you would any other python package. Avro to python is split between a *reader* and *writer* classes. avro-to-python treats namespaces as acyclic trees and uses depth first search to ensure no duplication or namespace collisions on read and write. An example usage is below:
 
 .. code-block:: python
 
@@ -179,7 +179,7 @@ Writer
 
 CLI
 
-- [X] Wrap Writer and Reader into one cli commmit
+- [X] Wrap Writer and Reader into one cli commit
 - [X] Add pip install option (would include all files to pip install compiled package)
 - [ ] Add better --help documentation
 

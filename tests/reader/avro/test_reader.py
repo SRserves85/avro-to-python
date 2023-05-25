@@ -196,6 +196,20 @@ class AvroReaderTests(unittest.TestCase):
             'primitive'
         )
 
+    def testComplexPrimitiveRecord(self):
+        filepath = self.directory + '/RecordWithComplexPrimitive.avsc'
+
+        reader = AvscReader(file=filepath)
+        reader.read()
+
+        obj = reader.file_tree
+
+        # test complex primitive type was mapped to primitive
+        self.assertEqual(
+            obj.children['records'].files['RecordWithComplexPrimitive'].fields['binaryData'].fieldtype,  # NOQA
+            'primitive'
+        )
+
     def testUnionRecord(self):
         filepath = self.directory + '/RecordWithUnion.avsc'
 
