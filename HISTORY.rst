@@ -2,6 +2,11 @@
 History
 =======
 
+0.3.4 (Future)
+^^^^^^^^^^^^^^^^^^
+
+* Fix primitive type with metadata handling.
+
 0.3.3 (2022-01-26)
 ^^^^^^^^^^^^^^^^^^
 
