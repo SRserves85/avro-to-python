@@ -26,7 +26,10 @@ class RecordWithComplexPrimitive(object):
     }
     """
 
-    def __init__(self, obj: Union[str, dict, 'RecordWithComplexPrimitive']) -> None:
+    def __init__(self, obj: Union[str, dict, 'RecordWithComplexPrimitive'] = None) -> None:
+        if obj is None:
+            return
+
         if isinstance(obj, str):
             obj = json.loads(obj)
 

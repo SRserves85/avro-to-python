@@ -43,6 +43,8 @@ class PathTests(unittest.TestCase):
         thing = Thing(data)
         thing_from_thing = Thing(thing)
         thing_from_json = Thing(data_json)
+        thing_from_setters = Thing()
+        thing_from_setters.id = 10
 
         self.assertEqual(
             eval(thing.serialize()),
@@ -60,6 +62,12 @@ class PathTests(unittest.TestCase):
             thing.serialize(),
             thing_from_json.serialize(),
             'thing should be able to initialize from json'
+        )
+
+        self.assertEqual(
+            thing.serialize(),
+            thing_from_setters.serialize(),
+            'thing should be able to initialize from setters'
         )
 
     def test_record_with_record(self):

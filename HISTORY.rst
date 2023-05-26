@@ -7,6 +7,7 @@ History
 
 * Fix primitive type with metadata handling.
 * Fix multi-dimensional array handling.
+* Allow empty constructor in generated objects.
 
 0.3.3 (2022-01-26)
 ^^^^^^^^^^^^^^^^^^
