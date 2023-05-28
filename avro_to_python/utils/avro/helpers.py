@@ -107,7 +107,7 @@ def get_union_types(
     Returns
     -------
         out_types: str
-            comma seperated string of python types
+            comma separated string of python types
     """
 
     out_types = []
@@ -132,6 +132,33 @@ def get_union_types(
             raise ValueError('unsupported type')
 
     return ','.join(out_types)
+
+def get_not_null_primitive_type_in_union(
+    field: Field,
+    PRIMITIVE_TYPE_MAP: dict=PRIMITIVE_TYPE_MAP
+) -> str:
+    """ Takes a field object and returns the not null primitive type if any
+
+    Parameters
+    ----------
+        field: dict
+            dictionary resembling a field for a union type
+        PRIMITIVE_TYPE_MAP: dict
+            lookup table mapping avro types to python types
+
+    Returns
+    -------
+        out_type: str
+            primitive type in union if any or empty string otherwise
+    """
+
+    for obj in field.union_types:
+
+        # primitive type
+        if obj.fieldtype == 'primitive' and obj.avrotype != 'null':
+            return PRIMITIVE_TYPE_MAP.get(obj.avrotype)
+
+    return ''
 
 
 def dedupe_imports(imports: List[Reference]) -> None:

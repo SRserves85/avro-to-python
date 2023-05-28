@@ -1,7 +1,7 @@
 {%- block basicimports %}
 import json
 {%- if file.avrotype == 'record' %}
-from {{pip_import}}helpers import default_json_serialize, todict
+from {{pip_import}}helpers import default_json_serialize, default_json_deserialize, todict
 from typing import Union
 {%- endif -%}
 {%- if file.avrotype == 'enum' %}

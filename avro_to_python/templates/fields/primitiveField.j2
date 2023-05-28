@@ -1,12 +1,10 @@
 {%- block primitive %}
     def set_{{name}}(self, value: {{primitive_type_map[field.avrotype]}}) -> None:
-
         if isinstance(value, {{primitive_type_map[field.avrotype]}}):
             self.{{name}} = value
         else:
             raise TypeError("field '{{name}}' should be type {{primitive_type_map[field.avrotype]}}")
 
     def get_{{name}}(self) -> {{primitive_type_map[field.avrotype]}}:
-
         return self.{{name}}
 {%- endblock -%}

@@ -3,7 +3,7 @@
 """ avro python class for file: RecordWithComplexPrimitive """
 
 import json
-from helpers import default_json_serialize, todict
+from helpers import default_json_serialize, default_json_deserialize, todict
 from typing import Union
 
 
@@ -41,20 +41,18 @@ class RecordWithComplexPrimitive(object):
                 f"{type(obj)} is not in ('str', 'dict', 'RecordWithComplexPrimitive')"
             )
 
-        self.set_binaryData(obj.get('binaryData', None))
+        self.set_binaryData(default_json_deserialize(obj.get('binaryData', None), bytes))
 
     def dict(self):
         return todict(self)
 
     def set_binaryData(self, value: bytes) -> None:
-
         if isinstance(value, bytes):
             self.binaryData = value
         else:
             raise TypeError("field 'binaryData' should be type bytes")
 
     def get_binaryData(self) -> bytes:
-
         return self.binaryData
 
     def serialize(self) -> None:

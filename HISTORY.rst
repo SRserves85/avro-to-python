@@ -8,6 +8,7 @@ History
 * Fix primitive type with metadata handling.
 * Fix multi-dimensional array handling.
 * Allow empty constructor in generated objects.
+* Support encoding bytes in JSON as base64 string.
 
 0.3.3 (2022-01-26)
 ^^^^^^^^^^^^^^^^^^

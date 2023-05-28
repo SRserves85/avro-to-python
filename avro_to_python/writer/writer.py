@@ -6,7 +6,7 @@ import os
 from jinja2 import Environment, FileSystemLoader
 
 from avro_to_python.classes.node import Node
-from avro_to_python.utils.avro.helpers import get_union_types
+from avro_to_python.utils.avro.helpers import get_union_types, get_not_null_primitive_type_in_union
 from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPE_MAP
 from avro_to_python.utils.paths import (
     get_system_path, verify_or_create_namespace_path, get_or_create_path,
@@ -213,6 +213,7 @@ class AvroWriter(object):
             file=file,
             primitive_type_map=PRIMITIVE_TYPE_MAP,
             get_union_types=get_union_types,
+            get_not_null_primitive_type_in_union=get_not_null_primitive_type_in_union,
             json=json,
             pip_import=self.pip_import,
             enumerate=enumerate

@@ -145,6 +145,44 @@ class PathTests(unittest.TestCase):
             record3.serialize()
         )
 
+    def test_record_with_bytes(self):
+        """ tests records with bytes work """
+
+        from records import RecordWithBytes
+
+        data1 = '{"binaryData": "SGVsbG8gd29ybGQh"}'
+        data2 = {'binaryData': b"Hello world!"}
+
+        record1 = RecordWithBytes(data1)
+        record2 = RecordWithBytes(data2)
+        record3 = RecordWithBytes()
+        record3.binaryData = b"Hello world!"
+
+        self.assertEqual(
+            record1.serialize(),
+            data1
+        )
+
+        self.assertEqual(
+            record1.serialize(),
+            record2.serialize()
+        )
+
+        self.assertEqual(
+            record1.binaryData,
+            record2.binaryData
+        )
+
+        self.assertEqual(
+            record1.serialize(),
+            record3.serialize()
+        )
+
+        self.assertEqual(
+            record1.binaryData,
+            record3.binaryData
+        )
+
     def test_record_with_logical_types(self):
         """ tests records with logical types work """
 
