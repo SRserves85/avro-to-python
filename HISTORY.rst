@@ -9,6 +9,7 @@ History
 * Fix multi-dimensional array handling.
 * Allow empty constructor in generated objects.
 * Support encoding bytes in JSON as base64 string.
+* Added encoding option for source and target files
 
 0.3.3 (2022-01-26)
 ^^^^^^^^^^^^^^^^^^

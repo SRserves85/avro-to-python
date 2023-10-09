@@ -28,7 +28,7 @@ class AvscReader(object):
     """
     file_tree = None
 
-    def __init__(self, directory: str=None, file: str=None) -> None:
+    def __init__(self, directory: str=None, file: str=None, encoding: str=None) -> None:
         """ Initializer should just create a list of files to process
 
         Parameters
@@ -41,6 +41,10 @@ class AvscReader(object):
                 path of avsc file to compile
                 Cannot be used with "directory" param
 
+            encoding: str
+                encoding of the source file(s) (defaults to
+                system encoding)
+
         Returns
         -------
             None
@@ -49,6 +53,7 @@ class AvscReader(object):
         # initialize cental object
         self.obj = {}
         self.file_tree = None
+        self.encoding = encoding
 
         if directory:
             if os.path.isfile(directory):
@@ -121,7 +126,7 @@ class AvscReader(object):
         """ reads and serializes avsc files to central object
         """
         for file in self.files:
-            with open(file, 'r') as f:
+            with open(file, 'r', encoding=self.encoding) as f:
                 serialized = json.load(f)
                 self.obj['avsc'].append(serialized)
 

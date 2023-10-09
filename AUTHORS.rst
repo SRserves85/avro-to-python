@@ -15,3 +15,4 @@ Contributors
 * Ethan Schwab <https://github.com/ethan-schwab>
 * Alejandro Jaramillo <https://github.com/irux>
 * Jon Leung <https://github.com/jkleung11>
+* Fernando Miguélez Palomo <https://github.com/fmiguelez>

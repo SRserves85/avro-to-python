@@ -54,7 +54,7 @@ class AvroWriter(object):
     files = []
 
     def __init__(self, tree: dict, pip: str=None, top_level_package: str=None, author: str=None,
-                 package_version: str=None) -> None:
+                 package_version: str=None, encoding=None) -> None:
         """ Parses tree structured dictionaries into python files
 
         Parameters
@@ -64,8 +64,14 @@ class AvroWriter(object):
                 acyclic tree representing a read avro schema namespace
             pip: str
                 pip package name
+            top_level_package: str
+                top level package to use (if specified)
             author: str
                 author of pip package
+            package_version: str
+                version of pip package
+            encoding: str
+                output encoding to use (default to system encoding)
 
         Returns
         -------
@@ -85,6 +91,7 @@ class AvroWriter(object):
         self.author = author
         self.package_version = package_version
         self.tree = tree
+        self.encoding = encoding
 
         # jinja2 templates
         self.template_env = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
@@ -133,7 +140,7 @@ class AvroWriter(object):
         filetext = template.render(
             pip = self.pip
         )
-        with open(filepath, 'w') as f:
+        with open(filepath, 'w', encoding=self.encoding) as f:
             f.write(filetext)
 
     def _write_setup_file(self) -> None:
@@ -145,7 +152,7 @@ class AvroWriter(object):
             author=self.author,
             package_version=self.package_version
         )
-        with open(filepath, 'w') as f:
+        with open(filepath, 'w', encoding=self.encoding) as f:
             f.write(filetext)
 
     def _write_pip_init_file(self) -> None:
@@ -157,7 +164,7 @@ class AvroWriter(object):
             author=self.author,
             package_version=self.package_version
         )
-        with open(filepath, 'w') as f:
+        with open(filepath, 'w', encoding=self.encoding) as f:
             f.write(filetext)
 
     def _write_helper_file(self) -> None:
@@ -165,7 +172,7 @@ class AvroWriter(object):
         filepath = self.top_level_package_dir + '/helpers.py'
         template = self.template_env.get_template('files/helpers.j2')
         filetext = template.render()
-        with open(filepath, 'w') as f:
+        with open(filepath, 'w', encoding=self.encoding) as f:
             f.write(filetext)
 
     def _write_init_file(self, imports: set, namespace: str) -> None:
@@ -180,7 +187,7 @@ class AvroWriter(object):
             namespace=namespace
         )
         filepath = self.top_level_package_dir + namespace.replace('.', '/') + '/' + '__init__.py'  # NOQA
-        with open(filepath, 'w') as f:
+        with open(filepath, 'w', encoding=self.encoding) as f:
             f.write(filetext)
 
     def _write_file(
@@ -193,7 +200,7 @@ class AvroWriter(object):
             namespace=namespace
         )
         filepath = self.top_level_package_dir + namespace.replace('.', '/') + '/' + filename + '.py'  # NOQA
-        with open(filepath, 'w') as f:
+        with open(filepath, 'w', encoding=self.encoding) as f:
             f.write(filetext)
 
     def _render_file(self, file: dict) -> str:
