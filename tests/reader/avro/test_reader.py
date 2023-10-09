@@ -260,7 +260,7 @@ class AvroReaderTests(unittest.TestCase):
         # should have 3 fields
         self.assertEqual(
             len(obj.children['records'].files['RecordWithArray'].fields),
-            5
+            6
         )
 
         # field 0 should be of type reference
@@ -304,6 +304,21 @@ class AvroReaderTests(unittest.TestCase):
             obj.children['records'].files['RecordWithArray'].fields['threeDimRecordArray'].array_item_type.array_item_type.array_item_type.fieldtype,  # NOQA
             'reference'
         )
+
+        # field 5 should be of type union
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['arrayOfUnion'].array_item_type.fieldtype,  # NOQA
+            'union'
+        )
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['arrayOfUnion'].array_item_type.union_types[0].fieldtype,  # NOQA
+            'reference'
+        )
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['arrayOfUnion'].array_item_type.union_types[1].fieldtype,  # NOQA
+            'primitive'
+        )
+
 
     def testRecordWithArrayOrMap(self):
         filepath = self.directory + '/RecordWithArrayOfMap.avsc'

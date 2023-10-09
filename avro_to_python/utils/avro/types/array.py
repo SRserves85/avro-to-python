@@ -46,6 +46,8 @@ def _array_field(field: dict,
 
     if isinstance(field['type']['items'], str):
         field['type']['items'] = {'type': field['type']['items']}
+    elif isinstance(field['type']['items'], list):
+        field['type']['items'] = {'type': field['type']['items']}
 
     field_item_type = _get_field_type(
         field['type']['items'],
@@ -61,7 +63,7 @@ def _array_field(field: dict,
         })
 
     # handle complex types
-    elif field_item_type in ['record', 'enum', 'map', 'array']:
+    elif field_item_type in ['record', 'enum', 'map', 'array', 'union']:
         if field_item_type == 'record':
             _func = _record_field
         elif field_item_type == 'enum':
@@ -73,6 +75,12 @@ def _array_field(field: dict,
             _func = _map_field
         elif field_item_type == 'array':
             _func = _array_field
+        elif field_item_type == 'union':
+            # delayed importing to avoid circular dependency, may want to do
+            # the same in map.py
+            from avro_to_python.utils.avro.types.union import _union_field
+            field['type']['items'] = field['type']['items']['type']
+            _func = _union_field
         else:
             raise ValueError("you shouldn't have been able to get here")
         kwargs.update({'array_item_type': _func(

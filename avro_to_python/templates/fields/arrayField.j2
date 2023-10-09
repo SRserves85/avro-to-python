@@ -13,7 +13,7 @@
                     raise TypeError(
                         "Type for '{{name}}' should be '{{primitive_type_map[field.array_item_type.fieldtype]}}'"
                     )
-                {%- elif field.array_item_type.fieldtype == 'map' or field.array_item_type.fieldtype == 'array'%}
+                {%- elif field.array_item_type.fieldtype == 'map' or field.array_item_type.fieldtype == 'array' or field.array_item_type.fieldtype == 'union'%}
                 self.{{name}}.append(element)
                 {%- endif %}
         else:
