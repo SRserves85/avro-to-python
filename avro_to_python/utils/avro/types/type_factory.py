@@ -44,6 +44,9 @@ def _get_field_type(field: dict, references: list=None) -> str:
                 raise ValueError(
                     f'{field["type"]["type"]} is not supported.'
                 )
+        # primitive type with metadata (e.g. "java-class":"[B]")
+        elif field['type']['type'] in PRIMITIVE_TYPES:
+            return 'primitive'
 
         else:
             raise ValueError(

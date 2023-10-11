@@ -43,6 +43,8 @@ class PathTests(unittest.TestCase):
         thing = Thing(data)
         thing_from_thing = Thing(thing)
         thing_from_json = Thing(data_json)
+        thing_from_setters = Thing()
+        thing_from_setters.id = 10
 
         self.assertEqual(
             eval(thing.serialize()),
@@ -60,6 +62,12 @@ class PathTests(unittest.TestCase):
             thing.serialize(),
             thing_from_json.serialize(),
             'thing should be able to initialize from json'
+        )
+
+        self.assertEqual(
+            thing.serialize(),
+            thing_from_setters.serialize(),
+            'thing should be able to initialize from setters'
         )
 
     def test_record_with_record(self):
@@ -137,6 +145,44 @@ class PathTests(unittest.TestCase):
             record3.serialize()
         )
 
+    def test_record_with_bytes(self):
+        """ tests records with bytes work """
+
+        from records import RecordWithBytes
+
+        data1 = '{"binaryData": "SGVsbG8gd29ybGQh"}'
+        data2 = {'binaryData': b"Hello world!"}
+
+        record1 = RecordWithBytes(data1)
+        record2 = RecordWithBytes(data2)
+        record3 = RecordWithBytes()
+        record3.binaryData = b"Hello world!"
+
+        self.assertEqual(
+            record1.serialize(),
+            data1
+        )
+
+        self.assertEqual(
+            record1.serialize(),
+            record2.serialize()
+        )
+
+        self.assertEqual(
+            record1.binaryData,
+            record2.binaryData
+        )
+
+        self.assertEqual(
+            record1.serialize(),
+            record3.serialize()
+        )
+
+        self.assertEqual(
+            record1.binaryData,
+            record3.binaryData
+        )
+
     def test_record_with_logical_types(self):
         """ tests records with logical types work """
 
@@ -163,9 +209,9 @@ class PathTests(unittest.TestCase):
         from records import RecordWithArray
         from records import Thing
 
-        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
-        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
-        data3 = {'things': [], 'numbers': [], 'things2': []}
+        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40], 'things2': [], 'twoDimDoubleArray': [[1.1, 2.2], [3.3, 4.5]], 'threeDimRecordArray': [[[{'id': 10}, {'id': 50}]]]}  # NOQA
+        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40], 'things2': [], 'twoDimDoubleArray': [[1.1, 2.2], [3.3, 4.5]], 'threeDimRecordArray': [[[Thing({'id': 10}), {'id': 50}]]]}  # NOQA
+        data3 = {'things': [], 'numbers': [], 'things2': [], 'twoDimDoubleArray': [], 'threeDimRecordArray': []}
         data4 = {'things': [{'id': 10}, {'id': 50}], 'numbers': ['not a long'], 'things2': []}  # NOQA
         data5 = {'things': [{'id': 'not a long'}, {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
 
@@ -181,7 +227,7 @@ class PathTests(unittest.TestCase):
 
         self.assertEqual(
             record3.serialize(),
-            '{"things": [], "numbers": [], "things2": []}'
+            '{"things": [], "numbers": [], "things2": [], "twoDimDoubleArray": [], "threeDimRecordArray": []}'
         )
 
         self.assertEqual(

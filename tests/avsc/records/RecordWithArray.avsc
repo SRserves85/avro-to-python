@@ -29,5 +29,34 @@
         "type": "Thing"
       }
     }
+  }, {
+    "name": "twoDimDoubleArray",
+    "type": {
+      "type": "array",
+      "items" : {
+        "type" : "array",
+        "items" : "double",
+        "java-class" : "[D"
+      },
+      "java-class" : "[[D"
+    }
+  }, {
+    "name": "threeDimRecordArray",
+    "type": {
+      "type": "array",
+      "items" : {
+        "type" : "array",
+        "items" : {
+          "type" : "array",
+          "items" : "Thing"
+        }
+      }
+    }
+  }, {
+    "name": "arrayOfUnion",
+    "type": {
+      "type": "array",
+      "items" : [ "Thing", "int" ]
+    }
   } ]
 }

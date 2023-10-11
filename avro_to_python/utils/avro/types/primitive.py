@@ -39,6 +39,8 @@ def _primitive_type(field: Union[dict, str]) -> dict:
         elif isinstance(field.get('type'), dict):
             if field.get('type', {}).get('logicalType'):
                 kwargs.update({'avrotype': field['type']['type']})
+            elif field.get('type', {}).get('type') in PRIMITIVE_TYPES:
+                kwargs.update({'avrotype': field['type']['type']})
 
         elif isinstance(field.get('type'), str):
             if field['type'] in PRIMITIVE_TYPES:

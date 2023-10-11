@@ -1,16 +1,12 @@
 """ class to test reading of various avro formats """
 
-import copy
 import os
 import unittest
 from unittest.mock import patch
 
 import avro_to_python
-from avro_to_python.classes.file import File
 from avro_to_python.reader.read import AvscReader
 from avro_to_python.utils.paths import get_joined_path
-from avro_to_python.utils.avro.types.array import _array_field
-from avro_to_python.utils.avro.types.reference import _reference_type
 
 
 class AvroReaderTests(unittest.TestCase):
@@ -196,6 +192,20 @@ class AvroReaderTests(unittest.TestCase):
             'primitive'
         )
 
+    def testComplexPrimitiveRecord(self):
+        filepath = self.directory + '/RecordWithComplexPrimitive.avsc'
+
+        reader = AvscReader(file=filepath)
+        reader.read()
+
+        obj = reader.file_tree
+
+        # test complex primitive type was mapped to primitive
+        self.assertEqual(
+            obj.children['records'].files['RecordWithComplexPrimitive'].fields['binaryData'].fieldtype,  # NOQA
+            'primitive'
+        )
+
     def testUnionRecord(self):
         filepath = self.directory + '/RecordWithUnion.avsc'
 
@@ -250,7 +260,7 @@ class AvroReaderTests(unittest.TestCase):
         # should have 3 fields
         self.assertEqual(
             len(obj.children['records'].files['RecordWithArray'].fields),
-            3
+            6
         )
 
         # field 0 should be of type reference
@@ -270,6 +280,45 @@ class AvroReaderTests(unittest.TestCase):
             obj.children['records'].files['RecordWithArray'].fields['things2'].array_item_type.fieldtype,  # NOQA
             'reference'
         )
+
+        # field 3 should be of type array
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['twoDimDoubleArray'].array_item_type.fieldtype,  # NOQA
+            'array'
+        )
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['twoDimDoubleArray'].array_item_type.array_item_type.fieldtype,  # NOQA
+            'primitive'
+        )
+
+        # field 4 should be of type array
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['threeDimRecordArray'].array_item_type.fieldtype,  # NOQA
+            'array'
+        )
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['threeDimRecordArray'].array_item_type.array_item_type.fieldtype,  # NOQA
+            'array'
+        )
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['threeDimRecordArray'].array_item_type.array_item_type.array_item_type.fieldtype,  # NOQA
+            'reference'
+        )
+
+        # field 5 should be of type union
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['arrayOfUnion'].array_item_type.fieldtype,  # NOQA
+            'union'
+        )
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['arrayOfUnion'].array_item_type.union_types[0].fieldtype,  # NOQA
+            'reference'
+        )
+        self.assertEqual(
+            obj.children['records'].files['RecordWithArray'].fields['arrayOfUnion'].array_item_type.union_types[1].fieldtype,  # NOQA
+            'primitive'
+        )
+
 
     def testRecordWithArrayOrMap(self):
         filepath = self.directory + '/RecordWithArrayOfMap.avsc'

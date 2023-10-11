@@ -1,6 +1,10 @@
 {%- block object_setter %}
 {%- if field.default is string -%}
         self.set_{{name}}(obj.get('{{name}}', '{{field.default}}'))
+{%- elif field.fieldtype == 'primitive' -%}
+        self.set_{{name}}(default_json_deserialize(obj.get('{{name}}', {{field.default}}), {{primitive_type_map[field.avrotype]}}))
+{%- elif field.fieldtype == 'union' and get_not_null_primitive_type_in_union(field) != '' -%}
+        self.set_{{name}}(default_json_deserialize(obj.get('{{name}}', {{field.default}}), {{get_not_null_primitive_type_in_union(field)}}))
 {%- else -%}
         self.set_{{name}}(obj.get('{{name}}', {{field.default}}))
 {%- endif -%}

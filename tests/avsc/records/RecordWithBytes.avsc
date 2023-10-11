@@ -1,0 +1,9 @@
+{
+  "type" : "record",
+  "name" : "RecordWithBytes",
+  "namespace" : "records",
+  "fields" : [ {
+    "name" : "binaryData",
+    "type" : "bytes"
+  } ]
+}

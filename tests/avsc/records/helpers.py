@@ -1,15 +1,24 @@
 """ helper files for avro serialization """
 
 from enum import Enum, EnumMeta
+from base64 import b64encode, b64decode
 
 
 def default_json_serialize(obj):
-    """ Wrapper for serializing enum types """
+    """ Wrapper for serializing enum and bytes types"""
     if isinstance(obj, Enum):
         return obj.name
+    elif isinstance(obj, bytes):
+        return b64encode(obj).decode('utf-8')
     else:
         return obj.__dict__
 
+def default_json_deserialize(obj, targetType):
+    """ Wrapper for deserializing bytes type"""
+    if isinstance(obj, str) and targetType == bytes:
+        return b64decode(obj)
+    else:
+        return obj
 
 def todict(obj, classkey=None):
     """ helper function to convert nested objects to dicts """

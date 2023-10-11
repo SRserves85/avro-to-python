@@ -1,0 +1,12 @@
+{
+  "type" : "record",
+  "name" : "RecordWithComplexPrimitive",
+  "namespace" : "records",
+  "fields" : [ {
+    "name" : "binaryData",
+    "type" : {
+      "type" : "bytes",
+      "java-class" : "[B"
+    }
+  } ]
+}
