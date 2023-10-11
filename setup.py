@@ -17,7 +17,7 @@ requirements = ['Jinja2==3.1.2', 'Click==8.0.4', 'MarkupSafe==2.0.1']
 test_requirements = [
     'pip==22.0.4',
     'bump2version==1.0.1',
-    'wheel==0.37.1',
+    'wheel==0.38.1',
     'watchdog==2.1.6',
     'flake8==4.0.1',
     'tox==3.24.5',
