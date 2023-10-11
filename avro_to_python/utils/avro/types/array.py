@@ -90,7 +90,7 @@ def _array_field(field: dict,
 
     else:
         raise ValueError(
-            f"avro type {field['items']['type']} is not supported"
+            f"avro type array<{field['type']['items']['type']}> is not supported"
         )
 
     return Field(**kwargs)
