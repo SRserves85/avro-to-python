@@ -9,7 +9,7 @@ from avro_to_python.utils.exceptions import BadReferenceError
 from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPE_MAP
 
 
-def _create_reference(file: dict) -> dict:
+def _create_reference(file: dict) -> Reference:
     """ creates a reference object for file references
 
     Parameters
@@ -19,10 +19,10 @@ def _create_reference(file: dict) -> dict:
 
     Returns
     -------
-        reference: dict
+        reference: Reference
             object containing reference information
     """
-    if any([('name' not in file), ('namespace') not in file]):
+    if any([('name' not in file), 'namespace' not in file]):
         raise BadReferenceError
 
     return Reference(
@@ -55,7 +55,8 @@ def _get_name(obj: dict) -> str:
         return name
     return obj['name']
 
-def _get_namespace(obj: dict, parent_namespace: str=None) -> str:
+
+def _get_namespace(obj: dict, parent_namespace: str = None) -> str:
     """ imputes the namespace if it doesn't already exist
 
     Namespaces follow the following chain of logic:
@@ -93,7 +94,7 @@ def _get_namespace(obj: dict, parent_namespace: str=None) -> str:
 
 def get_union_types(
     field: Field,
-    PRIMITIVE_TYPE_MAP: dict=PRIMITIVE_TYPE_MAP
+    primitive_type_map: dict = PRIMITIVE_TYPE_MAP
 ) -> str:
     """ Takes a field object and returns the types of the fields
 
@@ -101,7 +102,7 @@ def get_union_types(
     ----------
         field: dict
             dictionary resembling a field for a union type
-        PRIMITIVE_TYPE_MAP: dict
+        primitive_type_map: dict
             lookup table mapping avro types to python types
 
     Returns
@@ -116,7 +117,7 @@ def get_union_types(
 
         # primitive type
         if obj.fieldtype == 'primitive':
-            out_types.append(PRIMITIVE_TYPE_MAP.get(obj.avrotype))
+            out_types.append(primitive_type_map.get(obj.avrotype))
 
         # reference to a named type
         elif obj.fieldtype == 'reference':
@@ -133,9 +134,10 @@ def get_union_types(
 
     return ','.join(out_types)
 
+
 def get_not_null_primitive_type_in_union(
     field: Field,
-    PRIMITIVE_TYPE_MAP: dict=PRIMITIVE_TYPE_MAP
+    primitive_type_map: dict = PRIMITIVE_TYPE_MAP
 ) -> str:
     """ Takes a field object and returns the not null primitive type if any
 
@@ -143,7 +145,7 @@ def get_not_null_primitive_type_in_union(
     ----------
         field: dict
             dictionary resembling a field for a union type
-        PRIMITIVE_TYPE_MAP: dict
+        primitive_type_map: dict
             lookup table mapping avro types to python types
 
     Returns
@@ -156,13 +158,13 @@ def get_not_null_primitive_type_in_union(
 
         # primitive type
         if obj.fieldtype == 'primitive' and obj.avrotype != 'null':
-            return PRIMITIVE_TYPE_MAP.get(obj.avrotype)
+            return primitive_type_map.get(obj.avrotype)
 
     return ''
 
 
-def dedupe_imports(imports: List[Reference]) -> None:
-    """ Dedupes list of imports
+def dedupe_imports(imports: List[Reference]) -> list:
+    """ De-dupes list of imports
 
     Parameters
     ----------
@@ -197,4 +199,4 @@ def split_namespace(s: str) -> Tuple[str, str]:
     split = s.split('.')
     name = split.pop()
     namespace = '.'.join(split)
-    return (namespace, name)
+    return namespace, name

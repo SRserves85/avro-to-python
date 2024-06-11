@@ -102,6 +102,7 @@ def _union_field(field: dict,
             kwargs['union_types'].append(_reference_type(
                 field={'name': 'uniontype',
                        'type': typ},
+                parent_namespace=parent_namespace,
                 references=references
             ))
 

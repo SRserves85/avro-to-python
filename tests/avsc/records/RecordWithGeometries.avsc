@@ -1,0 +1,96 @@
+{
+    "type": "record",
+    "name": "RecordWithGeometries",
+    "namespace": "records",
+    "fields": [
+        {
+            "name": "geometries",
+            "type": [
+                "null",
+                {
+                    "type": "array",
+                    "items": [
+                        {
+                            "name": "Point",
+                            "type": "record",
+                            "fields": [
+                                {
+                                    "name": "bbox",
+                                    "type": [
+                                        "null",
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "double",
+                                                "name": null
+                                            },
+                                            "java-class": "[D"
+                                        }
+                                    ],
+                                    "default": null
+                                },
+                                {
+                                    "name": "coordinates",
+                                    "type": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "double",
+                                            "name": null
+                                        },
+                                        "java-class": "[D"
+                                    }
+                                },
+                                {
+                                    "name": "type",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "record",
+                            "name": "LineString",
+                            "fields": [
+                                {
+                                    "name": "bbox",
+                                    "type": [
+                                        "null",
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "double",
+                                                "name": null
+                                            },
+                                            "java-class": "[D"
+                                        }
+                                    ],
+                                    "default": null
+                                },
+                                {
+                                    "name": "coordinates",
+                                    "type": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "double",
+                                                "name": null
+                                            },
+                                            "java-class": "[D"
+                                        },
+                                        "java-class": "[[D"
+                                    }
+                                },
+                                {
+                                    "name": "type",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    ],
+                    "default": null
+                }
+            ],
+            "default": null
+        }
+    ]
+}

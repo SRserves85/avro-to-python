@@ -1,22 +1,21 @@
 """ contains class and methods for reading avro files and dirs """
 
 import copy
-import os
 import json
+import os
 
-from avro_to_python.classes.node import Node
+from avro_to_python.classes.field import Field
 from avro_to_python.classes.file import File
-
-from avro_to_python.utils.paths import (
-    get_system_path, get_avsc_files, verify_path_exists
-)
+from avro_to_python.classes.node import Node
+from avro_to_python.utils.avro.files.enum import _enum_file
+from avro_to_python.utils.avro.files.record import _record_file
+from avro_to_python.utils.avro.helpers import _get_name, _get_namespace
 from avro_to_python.utils.exceptions import (
     NoFileOrDir, MissingFileError, NoFilesError
 )
-
-from avro_to_python.utils.avro.helpers import _get_name, _get_namespace
-from avro_to_python.utils.avro.files.enum import _enum_file
-from avro_to_python.utils.avro.files.record import _record_file
+from avro_to_python.utils.paths import (
+    get_system_path, get_avsc_files, verify_path_exists
+)
 
 
 class AvscReader(object):
@@ -54,6 +53,7 @@ class AvscReader(object):
         self.obj = {}
         self.file_tree = None
         self.encoding = encoding
+        self.enum_references = set()
 
         if directory:
             if os.path.isfile(directory):
@@ -171,6 +171,7 @@ class AvscReader(object):
             # handle enum type file
             elif file.avrotype == 'enum':
                 _enum_file(file, item)
+                self._add_enum_reference(file)
             else:
                 raise ValueError(
                     f"{file['type']} is currently not supported."
@@ -178,4 +179,33 @@ class AvscReader(object):
 
             current_node.files[item['name']] = file
 
+        self._process_enum_references_in_node(root_node)
         self.file_tree = root_node
+
+    def _add_enum_reference(self, file:File) -> None:
+        self.enum_references.add(f"{file.namespace}.{file.name}")
+
+    def _process_enum_references_in_node(self, node: Node) -> None:
+        for file_key in node.files:
+            file = node.files[file_key]
+            if file.avrotype == 'record':
+                for field in file.fields:
+                    self._process_enum_references_in_field(file.fields[field])
+
+        for child in node.children:
+            self._process_enum_references_in_node(node.children[child])
+
+    def _process_enum_references_in_field(self, field: Field) -> None:
+        if field.fieldtype == 'reference':
+            self._process_reference(field)
+        elif field.fieldtype == 'array':
+            self._process_enum_references_in_field(field.array_item_type)
+        elif field.fieldtype == 'map':
+            self._process_enum_references_in_field(field.map_type)
+        elif field.fieldtype == 'union':
+            for item in field.union_types:
+                self._process_enum_references_in_field(item)
+
+    def _process_reference(self, field:Field) -> None:
+        if f"{field.reference_namespace}.{field.reference_name}" in self.enum_references and not field.is_enum:
+            field.is_enum = True

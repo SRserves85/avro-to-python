@@ -15,11 +15,11 @@
                     {%- if field.map_type.fieldtype == 'reference' %}
                     self.{{name}}.append({key: {{field.map_type.reference_name}}(value)})
                     {%- elif field.map_type.fieldtype == 'primitive'%}
-                    if isinstance(value, {{primitive_type_map[field.map_type.avrotype]}}):
+                    if isinstance(value, {{is_instance_primitive_type_map[field.map_type.avrotype]}}):
                         self.{{name}}.append({key: value})
                     else:
                         raise TypeError(
-                            "Type for '{{name}}' should be '{{primitive_type_map[field.map_type.avrotype]}}'"
+                            f"Type for '{{name}}' should be '{{is_instance_primitive_type_map[field.map_type.avrotype]}}' but was: {value}"
                         )
                     {%- elif field.map_type.fieldtype == 'map'%}
                     sub_array = []
@@ -33,11 +33,11 @@
                                 {%- if field.map_type.map_type.fieldtype == 'reference' %}
                                 sub_array.append({sub_key: {{field.map_type.map_type.reference_name}}(sub_value)})
                                 {%- elif field.map_type.map_type.fieldtype == 'primitive'%}
-                                if isinstance(sub_value, {{primitive_type_map[field.map_type.map_type.avrotype]}}):
+                                if isinstance(sub_value, {{is_instance_primitive_type_map[field.map_type.map_type.avrotype]}}):
                                     sub_array.append({sub_key: sub_value})
                                 else:
                                     raise TypeError(
-                                        "Type for '{{name}}' should be '{{primitive_type_map[field.map_type.map_type.avrotype]}}'"
+                                        f"Type for '{{name}}' should be '{{is_instance_primitive_type_map[field.map_type.map_type.avrotype]}}' but was: {sub_value}"
                                     )
                                 {%- endif %}
                     self.{{name}}.append({key: sub_array})
@@ -49,16 +49,16 @@
                             {%- if field.map_type.array_item_type.fieldtype == 'reference' %}
                             sub_array.append({{field.map_type.array_item_type.reference_name}}(element))
                             {%- elif field.array_item_type.fieldtype == 'primitive'%}
-                            if isinstance(element, {{primitive_type_map[field.map_type.array_item_type.avrotype]}}):
+                            if isinstance(element, {{is_instance_primitive_type_map[field.map_type.array_item_type.avrotype]}}):
                                 sub_array.append(element)
                             else:
                                 raise TypeError(
-                                    "Type for '{{name}}' should be '{{primitive_type_map[field.array_item_type.fieldtype]}}'"
+                                    f"Type for '{{name}}' should be '{{is_instance_primitive_type_map[field.array_item_type.avrotype]}}' but was: {element}"
                                 )
                             {%- endif %}
                     {%- endif %}
         else:
-            raise TypeError("Field '{{name}}' should be type list")
+            raise TypeError(f"Field '{{name}}' should be type list but was: {values}")
 
     def get_{{name}}(self) -> list:
         return self.{{name}}

@@ -7,7 +7,8 @@ from jinja2 import Environment, FileSystemLoader
 
 from avro_to_python.classes.node import Node
 from avro_to_python.utils.avro.helpers import get_union_types, get_not_null_primitive_type_in_union
-from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPE_MAP
+from avro_to_python.utils.avro.primitive_types import (
+    PRIMITIVE_TYPE_MAP, IS_INSTANCE_PRIMITIVE_TYPE_MAP, IS_INSTANCE_PRIMITIVE_TYPE_EQ_MAP)
 from avro_to_python.utils.paths import (
     get_system_path, verify_or_create_namespace_path, get_or_create_path,
     get_joined_path)
@@ -219,6 +220,8 @@ class AvroWriter(object):
         filetext = self.template.render(
             file=file,
             primitive_type_map=PRIMITIVE_TYPE_MAP,
+            is_instance_primitive_type_map=IS_INSTANCE_PRIMITIVE_TYPE_MAP,
+            is_instance_primitive_type_eq_map=IS_INSTANCE_PRIMITIVE_TYPE_EQ_MAP,
             get_union_types=get_union_types,
             get_not_null_primitive_type_in_union=get_not_null_primitive_type_in_union,
             json=json,

@@ -1,0 +1,27 @@
+{
+    "type": "record",
+    "name": "RecordWithNumbers",
+    "namespace": "records",
+    "fields": [
+        {
+            "name": "booleanValue",
+            "type": "boolean"
+        },
+        {
+            "name": "intValue",
+            "type": "int"
+        },
+        {
+            "name": "longValue",
+            "type": "long"
+        },
+        {
+            "name": "floatValue",
+            "type": "float"
+        },
+        {
+            "name": "doubleValue",
+            "type": "double"
+        }
+    ]
+}

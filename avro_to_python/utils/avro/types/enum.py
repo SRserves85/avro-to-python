@@ -16,7 +16,8 @@ kwargs = {
     'avrotype': None,
     'default': None,
     'reference_name': None,
-    'reference_namespace': None
+    'reference_namespace': None,
+    'is_enum': True
 }
 
 

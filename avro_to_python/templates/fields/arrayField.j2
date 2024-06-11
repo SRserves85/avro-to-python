@@ -7,17 +7,61 @@
                 {%- if field.array_item_type.fieldtype == 'reference' %}
                 self.{{name}}.append({{field.array_item_type.reference_name}}(element))
                 {%- elif field.array_item_type.fieldtype == 'primitive'%}
-                if isinstance(element, {{primitive_type_map[field.array_item_type.avrotype]}}):
+                if isinstance(element, {{is_instance_primitive_type_map[field.array_item_type.avrotype]}}):
                     self.{{name}}.append(element)
                 else:
                     raise TypeError(
-                        "Type for '{{name}}' should be '{{primitive_type_map[field.array_item_type.fieldtype]}}'"
+                        f"Type for '{{name}}' should be '{{is_instance_primitive_type_map[field.array_item_type.avrotype]}}' but was: {element}"
                     )
-                {%- elif field.array_item_type.fieldtype == 'map' or field.array_item_type.fieldtype == 'array' or field.array_item_type.fieldtype == 'union'%}
+                {%- elif field.array_item_type.fieldtype == 'map' or field.array_item_type.fieldtype == 'array'%}
                 self.{{name}}.append(element)
+                {%- elif field.array_item_type.fieldtype == 'union'%}
+                {%- set union_type_0 = get_union_types(field.array_item_type).split(',')[0] -%}
+                {%- if union_type_0 == 'None' %}
+                if element is None:
+                    self.{{name}}.append(None)
+                {%- elif (union_type_0 in primitive_type_map.values()) %}
+                if isinstance(element, {{union_type_0}}):
+                    self.{{name}}.append({{union_type_0}}(element))
+                {%- elif ((union_type_0 not in primitive_type_map.values()) and (union_type_0 != 'list')) %}
+                if is_assignable(element, {{union_type_0}}):
+                    self.{{name}}.append({{union_type_0}}(element))
+                {%- endif %}
+                {#  #}
+                {%- set idx = 1 -%}
+                {% for i, typ in enumerate(get_union_types(field.array_item_type).split(',')[1:]) %}
+                {%- if typ == 'None' %}
+                elif element is None:
+                    self.{{name}}.append(None)
+                {%- elif (typ in primitive_type_map.values()) %}
+                elif isinstance(element, {{typ}}):
+                    self.{{name}}.append({{typ}}(element))
+                {%- elif ((typ not in primitive_type_map.values()) and (typ != 'list')) %}
+                elif is_assignable(element, {{typ}}):
+                    self.{{name}}.append({{typ}}(element))
+                {%- elif ((typ not in primitive_type_map.values()) and (typ == 'list')) %}
+                elif isinstance(element, list):
+                    list_element = []
+                    self.{{name}}.append(list_element)
+                    for nested_element in element:
+                    {#- handle tons of types which sucks... -#}
+                    {%- if field.array_item_type.union_types[idx + i].array_item_type.fieldtype == 'reference' %}
+                        list_element.append({{field.array_item_type.union_types[idx + i].array_item_type.reference_name}}(nested_element))
+                    {%- elif field.array_item_type.union_types[idx + i].array_item_type.fieldtype == 'primitive'%}
+                        if isinstance(element, {{is_instance_primitive_type_map[field.array_item_type.union_types[idx + i].array_item_type.avrotype]}}):
+                            list_element.append(nested_element)
+                        else:
+                            raise TypeError(
+                                f"Type for array item of union field '{{name}}' should be '{{is_instance_primitive_type_map[field.array_item_type.union_types[idx + i].array_item_type.avrotype]}}' but was: {nested_element}"
+                            )
+                    {%- else %}
+                        list_element.append(nested_element)
+                    {%- endif %}
+                {%- endif %}
+                {%- endfor %}
                 {%- endif %}
         else:
-            raise TypeError("Field '{{name}}' should be type list")
+            raise TypeError(f"Field '{{name}}' should be type list but was: {values}")
 
     def get_{{name}}(self) -> list:
         return self.{{name}}

@@ -2,26 +2,32 @@
     def set_{{name}}(self, value: Union[{{', '.join(get_union_types(field).split(','))}}]) -> None:
 {%- set union_type_0 = get_union_types(field).split(',')[0] -%}
 {%- if union_type_0 == 'None' %}
-        if isinstance(value, type({{union_type_0}})):
+        if value is None:
             self.{{name}} = None
 {%- elif (union_type_0 in primitive_type_map.values()) %}
-        if isinstance(value, {{union_type_0}}):
+        if isinstance(value, {{is_instance_primitive_type_eq_map[union_type_0]}}):
+            self.{{name}} = {{union_type_0}}(value)
+{%- elif field.union_types[0].is_enum %}
+        if isinstance(value, (str, {{union_type_0}})):
             self.{{name}} = {{union_type_0}}(value)
 {%- elif ((union_type_0 not in primitive_type_map.values()) and (union_type_0 != 'list')) %}
-        if isinstance(value, (dict, {{union_type_0}})):
+        if is_assignable(value, {{union_type_0}}):
             self.{{name}} = {{union_type_0}}(value)
 {%- endif %}
 {#  #}
 {%- set idx = 1 -%}
 {% for i, typ in enumerate(get_union_types(field).split(',')[1:]) %}
 {%- if typ == 'None' %}
-        elif isinstance(value, type({{typ}})):
+        elif value is None:
             self.{{name}} = None
 {%- elif (typ in primitive_type_map.values()) %}
-        elif isinstance(value, {{typ}}):
+        elif isinstance(value, {{is_instance_primitive_type_eq_map[typ]}}):
+            self.{{name}} = {{typ}}(value)
+{%- elif field.union_types[idx + i].is_enum %}
+        elif isinstance(value, (str, {{typ}})):
             self.{{name}} = {{typ}}(value)
 {%- elif ((typ not in primitive_type_map.values()) and (typ != 'list')) %}
-        elif isinstance(value, (dict, {{typ}})):
+        elif is_assignable(value, {{typ}}):
             self.{{name}} = {{typ}}(value)
 {%- elif ((typ not in primitive_type_map.values()) and (typ == 'list')) %}
         elif isinstance(value, list):
@@ -31,17 +37,63 @@
                 {%- if field.union_types[idx + i].array_item_type.fieldtype == 'reference' %}
                 self.{{name}}.append({{field.union_types[idx + i].array_item_type.reference_name}}(element))
                 {%- elif field.union_types[idx + i].array_item_type.fieldtype == 'primitive'%}
-                if isinstance(element, {{primitive_type_map[field.union_types[idx + i].array_item_type.avrotype]}}):
+                if isinstance(element, {{is_instance_primitive_type_map[field.union_types[idx + i].array_item_type.avrotype]}}):
                     self.{{name}}.append(element)
                 else:
                     raise TypeError(
-                        "Type for '{{name}}' should be '{{primitive_type_map[field.union_types[idx + i].array_item_type.fieldtype]}}'"
+                        f"Type for '{{name}}' should be '{{is_instance_primitive_type_map[field.union_types[idx + i].array_item_type.avrotype]}}' but was: {element}"
                     )
+                {%- elif field.union_types[idx + i].array_item_type.fieldtype == 'map' or field.union_types[idx + i].array_item_type.fieldtype == 'array'%}
+                self.{{name}}.append(element)
+                {%- elif field.union_types[idx + i].array_item_type.fieldtype == 'union'%}
+                {%- set nested_union_type_0 = get_union_types(field.union_types[idx + i].array_item_type).split(',')[0] -%}
+                {%- if nested_union_type_0 == 'None' %}
+                if element is None:
+                    self.{{name}}.append(None)
+                {%- elif (nested_union_type_0 in primitive_type_map.values()) %}
+                if isinstance(element, {{nested_union_type_0}}):
+                    self.{{name}}.append({{nested_union_type_0}}(element))
+                {%- elif ((nested_union_type_0 not in primitive_type_map.values()) and (nested_union_type_0 != 'list')) %}
+                if is_assignable(element, {{nested_union_type_0}}):
+                    self.{{name}}.append({{nested_union_type_0}}(element))
+                {%- endif %}
+                {#  #}
+                {%- set nested_idx = 1 -%}
+                {% for nested_i, nested_typ in enumerate(get_union_types(field.union_types[idx + i].array_item_type).split(',')[1:]) %}
+                {%- if nested_typ == 'None' %}
+                elif element is None:
+                    self.{{name}}.append(None)
+                {%- elif (nested_typ in primitive_type_map.values()) %}
+                elif isinstance(element, {{nested_typ}}):
+                    self.{{name}}.append({{nested_typ}}(element))
+                {%- elif ((nested_typ not in primitive_type_map.values()) and (nested_typ != 'list')) %}
+                elif is_assignable(element, {{nested_typ}}):
+                    self.{{name}}.append({{nested_typ}}(element))
+                {%- elif ((nested_typ not in primitive_type_map.values()) and (nested_typ == 'list')) %}
+                elif isinstance(element, list):
+                    list_element = []
+                    self.{{name}}.append(list_element)
+                    for nested_element in element:
+                    {#- handle tons of types which sucks... -#}
+                    {%- if field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type.fieldtype == 'reference' %}
+                        list_element.append({{field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type.reference_name}}(nested_element))
+                    {%- elif field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type.fieldtype == 'primitive'%}
+                        if isinstance(element, {{is_instance_primitive_type_map[field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type.avrotype]}}):
+                            list_element.append(nested_element)
+                        else:
+                            raise TypeError(
+                                f"Type for array item of union field '{{name}}' should be '{{is_instance_primitive_type_map[field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type.avrotype]}}' but was: {nested_element}"
+                            )
+                    {%- else %}
+                        list_element.append(nested_element)
+                    {%- endif %}
+                {%- endif %}
+                {%- endfor %}
                 {%- endif %}
 {%- endif %}
 {%- endfor %}
         else:
-            raise TypeError("field '{{name}}' should be in ({{', '.join(get_union_types(field).split(','))}})")
+            raise TypeError(f"field '{{name}}' should be in ({{', '.join(get_union_types(field).split(','))}}) but was: {value}")
 
     def get_{{name}}(self) -> Union[{{', '.join(get_union_types(field).split(','))}}]:
         return self.{{name}}

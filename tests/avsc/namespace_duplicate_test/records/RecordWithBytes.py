@@ -1,32 +1,29 @@
 # -*- coding: utf-8 -*-
 
-""" avro python class for file: RecordWithComplexPrimitive """
+""" avro python class for file: RecordWithBytes """
 
 import json
 from helpers import default_json_serialize, default_json_deserialize, todict, is_assignable
 from typing import Union
 
 
-class RecordWithComplexPrimitive(object):
+class RecordWithBytes(object):
 
     schema = """
     {
         "type": "record",
-        "name": "RecordWithComplexPrimitive",
+        "name": "RecordWithBytes",
         "namespace": "records",
         "fields": [
             {
                 "name": "binaryData",
-                "type": {
-                    "type": "bytes",
-                    "java-class": "[B"
-                }
+                "type": "bytes"
             }
         ]
     }
     """
 
-    def __init__(self, obj: Union[str, dict, 'RecordWithComplexPrimitive'] = None) -> None:
+    def __init__(self, obj: Union[str, dict, 'RecordWithBytes'] = None) -> None:
         if obj is None:
             return
 
@@ -38,7 +35,7 @@ class RecordWithComplexPrimitive(object):
 
         elif not isinstance(obj, dict):
             raise TypeError(
-                f"{type(obj)} is not in ('str', 'dict', 'RecordWithComplexPrimitive')"
+                f"{type(obj)} is not in ('str', 'dict', 'RecordWithBytes')"
             )
 
         self.set_binaryData(default_json_deserialize(obj.get('binaryData', None), bytes))

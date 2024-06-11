@@ -11,6 +11,9 @@ History
 * Support encoding bytes in JSON as base64 string.
 * Added encoding option for source and target files.
 * Support arrays with union item types.
+* Improved enum support (in unions and type references)
+* Added support for GeoJSON format
+* Improved number parsing
 
 0.3.3 (2022-01-26)
 ^^^^^^^^^^^^^^^^^^

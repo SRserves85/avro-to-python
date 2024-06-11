@@ -70,6 +70,36 @@ class PathTests(unittest.TestCase):
             'thing should be able to initialize from setters'
         )
 
+    def test_record_with_numbers(self):
+        """ tests records with numbers work """
+
+        from records import RecordWithNumbers
+
+        data1 = {'booleanValue': True, 'intValue': 3, 'longValue': 4000000000,
+                 'floatValue': 1.234E3, 'doubleValue': 1.234567890123456789E18}
+        data2 = ('{"booleanValue": true, "intValue": 3, "longValue": 4000000000, '
+                 '"floatValue": 1.234E3,'
+                 '"doubleValue": 1.2345678901234567E18}')
+        data3 = ('{"booleanValue": true, "intValue": 3, "longValue": 4000000000, '
+                 '"floatValue": 1234,'
+                 '"doubleValue": 1234567890123456789}')
+
+        record1 = RecordWithNumbers(data1)
+        record2 = RecordWithNumbers(data2)
+        record3 = RecordWithNumbers(data3)
+
+        self.assertEqual(
+            record1.serialize(),
+            record2.serialize(),
+            'records should be equal'
+        )
+
+        self.assertEqual(
+            record1.serialize(),
+            record3.serialize(),
+            'records should be equal'
+        )
+
     def test_record_with_record(self):
         """ tests nested records work """
 
@@ -209,11 +239,19 @@ class PathTests(unittest.TestCase):
         from records import RecordWithArray
         from records import Thing
 
-        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40], 'things2': [], 'twoDimDoubleArray': [[1.1, 2.2], [3.3, 4.5]], 'threeDimRecordArray': [[[{'id': 10}, {'id': 50}]]]}  # NOQA
-        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40], 'things2': [], 'twoDimDoubleArray': [[1.1, 2.2], [3.3, 4.5]], 'threeDimRecordArray': [[[Thing({'id': 10}), {'id': 50}]]]}  # NOQA
-        data3 = {'things': [], 'numbers': [], 'things2': [], 'twoDimDoubleArray': [], 'threeDimRecordArray': []}
-        data4 = {'things': [{'id': 10}, {'id': 50}], 'numbers': ['not a long'], 'things2': []}  # NOQA
-        data5 = {'things': [{'id': 'not a long'}, {'id': 50}], 'numbers': [10, 40], 'things2': []}  # NOQA
+        data1 = {'things': [{'id': 10}, {'id': 50}], 'numbers': [10, 40], 'things2': [],
+                 'twoDimDoubleArray': [[1.1, 2.2], [3.3, 4.5]], 'threeDimRecordArray': [[[{'id': 10}, {'id': 50}]]],
+                 'arrayOfUnion': [7, {'id': 8}]}  # NOQA
+        data2 = {'things': [Thing({'id': 10}), {'id': 50}], 'numbers': [10, 40], 'things2': [],
+                 'twoDimDoubleArray': [[1.1, 2.2], [3.3, 4.5]],
+                 'threeDimRecordArray': [[[Thing({'id': 10}), {'id': 50}]]],
+                 'arrayOfUnion': [7, Thing({'id': 8})]}  # NOQA
+        data3 = {'things': [], 'numbers': [], 'things2': [], 'twoDimDoubleArray': [], 'threeDimRecordArray': [],
+                 'arrayOfUnion': []}  # NOQA
+        data4 = {'things': [{'id': 10}, {'id': 50}], 'numbers': ['not a long'], 'things2': [],
+                 'arrayOfUnion': []}  # NOQA
+        data5 = {'things': [{'id': 'not a long'}, {'id': 50}], 'numbers': [10, 40], 'things2': [],
+                 'arrayOfUnion': []}  # NOQA
 
         record1 = RecordWithArray(data1)
         record2 = RecordWithArray(data2)
@@ -227,7 +265,8 @@ class PathTests(unittest.TestCase):
 
         self.assertEqual(
             record3.serialize(),
-            '{"things": [], "numbers": [], "things2": [], "twoDimDoubleArray": [], "threeDimRecordArray": []}'
+            '{"things": [], "numbers": [], "things2": [], "twoDimDoubleArray": [], "threeDimRecordArray": [], '
+            '"arrayOfUnion": []}'
         )
 
         self.assertEqual(
@@ -246,9 +285,11 @@ class PathTests(unittest.TestCase):
 
         from records import RecordWithUnion
         from records import Thing
+        from records.nested import Flavor
 
-        data1 = {'optionalString': 'hello', 'intOrThing': Thing({'id': 2}), 'nullOrThingArray': None}
-        data2 = {'optionalString': 'hello', 'intOrThing': {'id': 2}}
+        data1 = {'optionalString': 'hello', 'intOrThing': Thing({'id': 2}), 'nullOrThingArray': None,
+                 'nullOrEnum': Flavor('CHOCOLATE')}
+        data2 = {'optionalString': 'hello', 'intOrThing': {'id': 2}, 'nullOrEnum': 'CHOCOLATE'}
         data3 = {'optionalString': None, 'intOrThing': 10, 'nullOrThingArray': [{'id': 2}], 'nullOrMap': {'value': 0.1}}
         data4 = {'optionalString': 'hello', 'intOrThing': 'not int or thing'}
 
@@ -257,7 +298,8 @@ class PathTests(unittest.TestCase):
         record3 = RecordWithUnion(data3)
 
         self.assertEqual(
-            '{"optionalString": "hello", "intOrThing": {"id": 2}, "nullOrThingArray": null, "nullOrMap": null}',
+            '{"optionalString": "hello", "intOrThing": {"id": 2}, "nullOrThingArray": null, "nullOrMap": null, '
+            '"nullOrEnum": "CHOCOLATE"}',
             record1.serialize()
         )
 
@@ -283,11 +325,67 @@ class PathTests(unittest.TestCase):
 
         self.assertEqual(
             record3.serialize(),
-            '{"optionalString": null, "intOrThing": 10, "nullOrThingArray": [{"id": 2}], "nullOrMap": {"value": 0.1}}'
+            '{"optionalString": null, "intOrThing": 10, "nullOrThingArray": [{"id": 2}], '
+            '"nullOrMap": {"value": 0.1}, "nullOrEnum": null}'
         )
 
         with self.assertRaises(TypeError):
             RecordWithUnion(data4)
+
+    def test_record_with_geometries(self):
+        """ tests records with union types """
+
+        from records import RecordWithGeometries
+        from records import Point
+        from records import LineString
+        from records import Thing
+
+        data1 = {'geometries': None}
+        data2 = {'geometries': [
+            LineString({"bbox": None, "coordinates": [[-96.41675, 33.968745], [-96.416745, 33.96757]],
+                        "type": "LineString"}),
+            Point({"bbox": None, "coordinates": [-96.41675, 33.968745], "type": "Point"})]}
+        data3 = {'geometries': [
+            {"bbox": None, "coordinates": [[-96.41675, 33.968745], [-96.416745, 33.96757]], "type": "LineString"},
+            {"bbox": None, "coordinates": [-96.41675, 33.968745], "type": "Point"}]}
+        data4 = {'geometries': [Thing({"id": 1})]}
+
+        record1 = RecordWithGeometries(data1)
+        record2 = RecordWithGeometries(data2)
+        record3 = RecordWithGeometries(data3)
+        record4 = RecordWithGeometries(data4)
+
+        self.assertEqual(
+            '{"geometries": null}',
+            record1.serialize()
+        )
+
+        self.assertEqual(
+            record2.serialize(),
+            record3.serialize()
+        )
+
+        self.assertEqual(
+            record2.serialize(),
+            '{"geometries": [{"bbox": null, "coordinates": [[-96.41675, 33.968745], [-96.416745, 33.96757]], '
+            '"type": "LineString"}, {"bbox": null, "coordinates": [-96.41675, 33.968745], "type": "Point"}]}'
+        )
+
+        self.assertIsInstance(
+            record3.geometries[0],
+            LineString
+        )
+
+        self.assertIsInstance(
+            record3.geometries[1],
+            Point
+        )
+
+        self.assertEqual(
+            len(record4.geometries),
+            0
+        )
+
 
     def test_nested_things(self):
         """ tests that nested things have correct mappings and namespaces """
