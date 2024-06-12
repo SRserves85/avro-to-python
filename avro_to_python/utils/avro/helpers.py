@@ -94,7 +94,8 @@ def _get_namespace(obj: dict, parent_namespace: str = None) -> str:
 
 def get_union_types(
     field: Field,
-    primitive_type_map: dict = PRIMITIVE_TYPE_MAP
+    primitive_type_map: dict = PRIMITIVE_TYPE_MAP,
+    container: object = None
 ) -> str:
     """ Takes a field object and returns the types of the fields
 
@@ -121,7 +122,16 @@ def get_union_types(
 
         # reference to a named type
         elif obj.fieldtype == 'reference':
-            out_types.append(obj.reference_name)
+            ref_name = obj.reference_name
+            if container and container.name == obj.reference_name:
+                if container.namespace == obj.reference_namespace:
+                    # We must quote reference name as this is a circular reference
+                    ref_name = (f"'{ref_name}'")
+                elif obj.reference_namespace:
+                    # Reference has same name but belongs to a different (non empty) package. We
+                    # must indicate full path
+                    ref_name = (f"'{obj.reference_namespace}.{ref_name}'")
+            out_types.append(ref_name)
 
         elif obj.fieldtype == 'array':
             out_types.append('list')
@@ -163,23 +173,40 @@ def get_not_null_primitive_type_in_union(
     return ''
 
 
-def dedupe_imports(imports: List[Reference]) -> list:
+def dedupe_imports(imports: List[Reference], owner: dict = None) -> (list, list):
     """ De-dupes list of imports
 
     Parameters
     ----------
+        owner: owner reference of the imports to deduplicate
         imports: list of dict
             list of imports of a file
 
     Returns
     -------
-        None
+        (list, list): first list contains the imports to render and the second those omitted due
+            to name clashing (same class name in different package)
     """
     hashmap = {}
+    hashmap_omitted = {}
     for i, obj in enumerate(imports):
-        hashmap[obj.name + obj.namespace] = obj
+        if owner and obj.name == owner["name"]:
+            # We have to leave out objects with same name
+            # This applies to:
+            #   + Circular references: The namespace will also match. We must avoid importing same file we are in. For
+            #                          the reference name must be enclosed in single quotes
+            #   + Same name from other namespace: We also avoid importing these references, and we must specify whole
+            #                                     name (namespace + name) when reference is used
+            if obj.namespace != owner["namespace"]:
+                # Circular reference
+                hashmap_omitted[f"'{obj.namespace}.{obj.name}'"] = obj
+        elif obj.name in hashmap and hashmap[obj.name].namespace != obj.namespace:
+            # Name clash. Same name already imported but belonging to other namespace
+            hashmap_omitted[f"'{obj.namespace}.{obj.name}'"] = obj
+        else:
+            hashmap[obj.name] = obj
 
-    return list(hashmap.values())
+    return (list(hashmap.values()), list(hashmap_omitted.values()))
 
 
 def split_namespace(s: str) -> Tuple[str, str]:

@@ -1,5 +1,5 @@
 {%- block union %}
-    def set_{{name}}(self, value: Union[{{', '.join(get_union_types(field).split(','))}}]) -> None:
+    def set_{{name}}(self, value: Union[{{', '.join(get_union_types(field,container=file).split(','))}}]) -> None:
 {%- set union_type_0 = get_union_types(field).split(',')[0] -%}
 {%- if union_type_0 == 'None' %}
         if value is None:
@@ -35,7 +35,7 @@
             for element in value:
                 {#- handle tons of types which sucks... -#}
                 {%- if field.union_types[idx + i].array_item_type.fieldtype == 'reference' %}
-                self.{{name}}.append({{field.union_types[idx + i].array_item_type.reference_name}}(element))
+                self.{{name}}.append({{file.resolve_reference_name(field.union_types[idx + i].array_item_type, pip_import)}}(element))
                 {%- elif field.union_types[idx + i].array_item_type.fieldtype == 'primitive'%}
                 if isinstance(element, {{is_instance_primitive_type_map[field.union_types[idx + i].array_item_type.avrotype]}}):
                     self.{{name}}.append(element)
@@ -76,7 +76,7 @@
                     for nested_element in element:
                     {#- handle tons of types which sucks... -#}
                     {%- if field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type.fieldtype == 'reference' %}
-                        list_element.append({{field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type.reference_name}}(nested_element))
+                        list_element.append({{file.resolve_reference_name(field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type, pip_import)}}(nested_element))
                     {%- elif field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type.fieldtype == 'primitive'%}
                         if isinstance(element, {{is_instance_primitive_type_map[field.union_types[idx + i].array_item_type.union_types[nested_idx + nested_i].array_item_type.avrotype]}}):
                             list_element.append(nested_element)
@@ -95,6 +95,6 @@
         else:
             raise TypeError(f"field '{{name}}' should be in ({{', '.join(get_union_types(field).split(','))}}) but was: {value}")
 
-    def get_{{name}}(self) -> Union[{{', '.join(get_union_types(field).split(','))}}]:
+    def get_{{name}}(self) -> Union[{{', '.join(get_union_types(field,container=file).split(','))}}]:
         return self.{{name}}
 {%- endblock -%}

@@ -1,9 +1,7 @@
 {%- block reference %}
-    def set_{{name}}(self, values: {{field.reference_name}}) -> None:
+    def set_{{name}}(self, values: {{file.resolve_reference_name(field, pip_import, True)}}) -> None:
+        self.{{name}} = {{file.resolve_reference_name(field, pip_import)}}(values)
 
-        self.{{name}} = {{field.reference_name}}(values)
-
-    def get_{{name}}(self) -> {{field.reference_name}}:
-
+    def get_{{name}}(self) -> {{file.resolve_reference_name(field, pip_import, True)}}:
         return self.{{name}}
 {%- endblock -%}

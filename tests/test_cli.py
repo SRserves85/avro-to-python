@@ -1,10 +1,11 @@
 """Tests for `avro_to_python` package."""
-
+import datetime
 import json
 import os
 import shutil
 import subprocess
 import sys
+import time
 import unittest
 
 from click.testing import CliRunner
@@ -21,6 +22,7 @@ class CliTests(unittest.TestCase):
             .replace(get_joined_path('avro_to_python','__init__.py'), 'tests/avsc/records')
 
     def tearDown(self):
+        pass
         shutil.rmtree('records', ignore_errors=True)
         shutil.rmtree('test-pip', ignore_errors=True)
         shutil.rmtree('test-top-level-package', ignore_errors=True)

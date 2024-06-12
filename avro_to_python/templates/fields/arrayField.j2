@@ -5,7 +5,7 @@
             for element in values:
                 {#- handle tons of types which sucks... -#}
                 {%- if field.array_item_type.fieldtype == 'reference' %}
-                self.{{name}}.append({{field.array_item_type.reference_name}}(element))
+                self.{{name}}.append({{file.resolve_reference_name(field.array_item_type, pip_import)}}(element))
                 {%- elif field.array_item_type.fieldtype == 'primitive'%}
                 if isinstance(element, {{is_instance_primitive_type_map[field.array_item_type.avrotype]}}):
                     self.{{name}}.append(element)
@@ -46,7 +46,7 @@
                     for nested_element in element:
                     {#- handle tons of types which sucks... -#}
                     {%- if field.array_item_type.union_types[idx + i].array_item_type.fieldtype == 'reference' %}
-                        list_element.append({{field.array_item_type.union_types[idx + i].array_item_type.reference_name}}(nested_element))
+                        list_element.append({{file.resolve_reference_name(field.array_item_type.union_types[idx + i].array_item_type, pip_import)}}(nested_element))
                     {%- elif field.array_item_type.union_types[idx + i].array_item_type.fieldtype == 'primitive'%}
                         if isinstance(element, {{is_instance_primitive_type_map[field.array_item_type.union_types[idx + i].array_item_type.avrotype]}}):
                             list_element.append(nested_element)

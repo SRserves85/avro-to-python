@@ -126,6 +126,33 @@ class PathTests(unittest.TestCase):
             'records should be equal'
         )
 
+    def test_record_with_circular_reference(self):
+        """ tests records with circular references """
+
+        from records import RecordWithCircularReference
+        from records import Node
+        import records.nested.Node
+
+        data1 = {'tree': {'id': '0',
+                          'children': [Node({'id': '00', 'parent': Node({'id': '0'})}),
+                                       {'id': '01', 'parent': {'id': '0'},
+                                        'children': [{'id': '010', 'parent': Node({'id': '01'})},
+                                                     {'id': '011',
+                                                      'parent': Node({'id': '01'})}]}]},
+                 'altTree': records.nested.Node({'name': 'x'})}
+        data2 = ('{"tree": {"id": "0", "children": [{"id": "00", "parent": {"id": "0"}}, '
+                 '{"id": "01", "parent": {"id": "0"}, "children": [{"id": "010", "parent": {"id": "01"}}, '
+                 '{"id": "011", "parent": {"id": "01"}}]}]}, "altTree": {"name": "x"}}')
+
+        record1 = RecordWithCircularReference(data1)
+        record2 = RecordWithCircularReference(data2)
+
+        self.assertEqual(
+            record1.serialize(),
+            record2.serialize(),
+            'records with circular references should be equal'
+        )
+
     def test_enum(self):
         """ tests Enums work """
 
@@ -385,7 +412,6 @@ class PathTests(unittest.TestCase):
             len(record4.geometries),
             0
         )
-
 
     def test_nested_things(self):
         """ tests that nested things have correct mappings and namespaces """

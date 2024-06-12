@@ -1,6 +1,5 @@
 {%- block map %}
     def set_{{name}}(self, values: list) -> None:
-
         self.{{name}} = []
         if isinstance(values, list):
             for item in values:
@@ -13,7 +12,7 @@
 
                     {#- handle tons of types without recursion which sucks... -#}
                     {%- if field.map_type.fieldtype == 'reference' %}
-                    self.{{name}}.append({key: {{field.map_type.reference_name}}(value)})
+                    self.{{name}}.append({key: {{file.resolve_reference_name(field.map_type, pip_import)}}(value)})
                     {%- elif field.map_type.fieldtype == 'primitive'%}
                     if isinstance(value, {{is_instance_primitive_type_map[field.map_type.avrotype]}}):
                         self.{{name}}.append({key: value})
@@ -31,7 +30,7 @@
                                         "keys in map types must be strings"
                                     )
                                 {%- if field.map_type.map_type.fieldtype == 'reference' %}
-                                sub_array.append({sub_key: {{field.map_type.map_type.reference_name}}(sub_value)})
+                                sub_array.append({sub_key: {{file.resolve_reference_name(field.map_type.map_type, pip_import)}}(sub_value)})
                                 {%- elif field.map_type.map_type.fieldtype == 'primitive'%}
                                 if isinstance(sub_value, {{is_instance_primitive_type_map[field.map_type.map_type.avrotype]}}):
                                     sub_array.append({sub_key: sub_value})
@@ -47,7 +46,7 @@
                         for element in value:
                             {#- handle tons of types which sucks... -#}
                             {%- if field.map_type.array_item_type.fieldtype == 'reference' %}
-                            sub_array.append({{field.map_type.array_item_type.reference_name}}(element))
+                            sub_array.append({{file.resolve_reference_name(field.map_type.array_item_type, pip_import)}}(element))
                             {%- elif field.array_item_type.fieldtype == 'primitive'%}
                             if isinstance(element, {{is_instance_primitive_type_map[field.map_type.array_item_type.avrotype]}}):
                                 sub_array.append(element)

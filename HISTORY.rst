@@ -14,6 +14,7 @@ History
 * Improved enum support (in unions and type references)
 * Added support for GeoJSON format
 * Improved number parsing
+* Added support for circular references and class name clashes
 
 0.3.3 (2022-01-26)
 ^^^^^^^^^^^^^^^^^^

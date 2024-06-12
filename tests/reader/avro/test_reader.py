@@ -150,6 +150,7 @@ class AvroReaderTests(unittest.TestCase):
                 'symbols': ['VANILLA', 'CHOCOLATE', 'STRAWBERRY']
             },
             'imports': [],
+            'aliased_imports': [],
             'fields': {},
             'symbols': ['VANILLA', 'CHOCOLATE', 'STRAWBERRY'],
             'default': None
