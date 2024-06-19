@@ -456,7 +456,12 @@ class PathTests(unittest.TestCase):
                  'thingMap2': {'string1': {'id': 10},
                                'string2': Thing({'id': 10})},
                  'thingMap3': {'string1': {'id': 10},
-                               'string2': Thing({'id': 10})}}
+                               'string2': Thing({'id': 10})},
+                 'arrayMap': {'string1': ['value1', 'value2']},
+                 'arrayOfUnionMap': {
+                     'string1': [Thing({'id': 10}), None]
+                 }
+                 }
         data2 = {'thingMap': {'string1': {'id': 10},
                               'string2': Thing({'id': 10})},
                  'intMap': {'lksdfl': 'NOT A STRING'}}

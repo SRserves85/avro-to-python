@@ -1,42 +1,67 @@
 {
-  "type" : "record",
-  "name" : "RecordWithMap",
-  "namespace" : "records",
-  "fields" : [ 
-    {
-      "name" : "thingMap",
-      "type" : {
-        "type" : "map",
-        "values" : {
-          "type" : "record",
-          "name" : "Thing",
-          "fields" : [ {
-            "name" : "id",
-            "type" : "int"
-        } ]
-      }
-    }
-  },
-  {
-    "name": "intMap",
-
-    "type": {
-       "type": "map",
-       "values": "int"
-    }
-  },
-  {
-    "name" : "thingMap2",
-    "type" : {
-      "type" : "map",
-      "values" : "Thing"
-    }
-  },
-  {
-    "name" : "thingMap3",
-    "type" : {
-      "type" : "map",
-      "values" : "record.Thing"
-    }
-  } ]
+    "type": "record",
+    "name": "RecordWithMap",
+    "namespace": "records",
+    "fields": [
+        {
+            "name": "thingMap",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "record",
+                    "name": "Thing",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "int"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "intMap",
+            "type": {
+                "type": "map",
+                "values": "int"
+            }
+        },
+        {
+            "name": "thingMap2",
+            "type": {
+                "type": "map",
+                "values": "Thing"
+            }
+        },
+        {
+            "name": "thingMap3",
+            "type": {
+                "type": "map",
+                "values": "record.Thing"
+            }
+        },
+        {
+            "name": "arrayMap",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "array",
+                    "items": "string"
+                }
+            }
+        },
+        {
+            "name": "arrayOfUnionMap",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "array",
+                    "items": [
+                        "null",
+                        "Thing"
+                    ]
+                }
+            }
+        }
+    ]
 }
