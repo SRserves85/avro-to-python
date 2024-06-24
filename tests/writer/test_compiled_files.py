@@ -75,10 +75,10 @@ class PathTests(unittest.TestCase):
 
         from records import RecordWithNumbers
 
-        data1 = {'booleanValue': True, 'intValue': 3, 'longValue': 4000000000,
-                 'floatValue': 1.234E3, 'doubleValue': 1.234567890123456789E18}
-        data2 = ('{"booleanValue": true, "intValue": 3, "longValue": 4000000000, '
-                 '"floatValue": 1.234E3,'
+        data1 = {'booleanValue': True, 'nullableBooleanValue': None, 'intValue': 3, 'longValue': 4000000000,
+                 'floatValue': 1.234E3, 'nullableFloatValue': None, 'doubleValue': 1.234567890123456789E18}
+        data2 = ('{"booleanValue": true, "nullableBooleanValue": null, "intValue": 3, "longValue": 4000000000, '
+                 '"floatValue": 1.234E3, "nullableFloatValue": null, '
                  '"doubleValue": 1.2345678901234567E18}')
         data3 = ('{"booleanValue": true, "intValue": 3, "longValue": 4000000000, '
                  '"floatValue": 1234,'

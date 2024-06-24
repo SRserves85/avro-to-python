@@ -18,7 +18,7 @@ def default_json_deserialize(obj, targetType):
     """ Wrapper for deserializing bytes type"""
     if isinstance(obj, str) and targetType == bytes:
         return b64decode(obj)
-    elif targetType == float:
+    elif obj is not None and targetType == float:
         return float(obj)
     else:
         return obj
