@@ -33,6 +33,31 @@ class PathTests(unittest.TestCase):
         """ remove all the compiled files"""
         shutil.rmtree(self.write_path + '/records')
 
+    def test_escape_chars(self):
+        """ tests that escape characters are not lost """
+
+        from records import EscapedChars
+        schema = r"""
+    {
+        "type": "record",
+        "name": "EscapedChars",
+        "namespace": "records",
+        "doc": "This is an example \"schema\".",
+        "fields": [
+            {
+                "name": "name",
+                "type": "string"
+            }
+        ]
+    }
+    """
+
+        self.assertEqual(
+            schema,
+            EscapedChars.schema,
+            "Schema should contain escape characters"
+        )
+
     def test_thing(self):
         """ tests that you can serialize and deserialize thing record """
 

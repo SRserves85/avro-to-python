@@ -17,6 +17,7 @@ History
 * Added support for circular references and class name clashes
 * Maps are treated now as dictionaries, not lists
 * Fix map of array of primitive handling
+* Escape chars are no longer lost in embedded AVRO schema
 
 0.3.3 (2022-01-26)
 ^^^^^^^^^^^^^^^^^^

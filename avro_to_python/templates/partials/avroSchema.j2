@@ -1,5 +1,5 @@
 {%- macro get_json_schema(schema) -%}
-{{'schema = """\n' + json.dumps(schema, indent=4) + '\n"""'}}
+{{'schema = r"""\n' + json.dumps(schema, indent=4) + '\n"""'}}
 {%- endmacro -%}
 
 {%- block schema -%}
