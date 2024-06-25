@@ -134,6 +134,7 @@ class PathTests(unittest.TestCase):
         data1 = {'thing1': {'id': 10}, 'thing2': {'id': 0}}
         data2 = {'thing1': Thing({'id': 10}), 'thing2': Thing({'id': 0})}
         data_with_default = {'thing1': {'id': 10}}
+        invalid_data = {'thing1': None}
 
         record1 = RecordWithRecord(data1)
         record2 = RecordWithRecord(data2)
@@ -150,6 +151,9 @@ class PathTests(unittest.TestCase):
             record3.serialize(),
             'records should be equal'
         )
+
+        with self.assertRaises(TypeError):
+            RecordWithRecord(invalid_data)
 
     def test_record_with_circular_reference(self):
         """ tests records with circular references """

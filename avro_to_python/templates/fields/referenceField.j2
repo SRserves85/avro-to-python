@@ -1,6 +1,9 @@
 {%- block reference %}
-    def set_{{name}}(self, values: {{file.resolve_reference_name(field, pip_import, True)}}) -> None:
-        self.{{name}} = {{file.resolve_reference_name(field, pip_import)}}(values)
+    def set_{{name}}(self, value: {{file.resolve_reference_name(field, pip_import, True)}}) -> None:
+        if value is not None:
+            self.{{name}} = {{file.resolve_reference_name(field, pip_import)}}(value)
+        else:
+            raise TypeError(f"field '{{name}}' is mandatory but value was None")
 
     def get_{{name}}(self) -> {{file.resolve_reference_name(field, pip_import, True)}}:
         return self.{{name}}

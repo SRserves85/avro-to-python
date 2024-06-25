@@ -18,6 +18,7 @@ History
 * Maps are treated now as dictionaries, not lists
 * Fix map of array of primitive handling
 * Escape chars are no longer lost in embedded AVRO schema
+* Mandatory record fields are now checked for a value
 
 0.3.3 (2022-01-26)
 ^^^^^^^^^^^^^^^^^^
