@@ -1,0 +1,12 @@
+{
+    "type": "record",
+    "name": "EscapedChars",
+    "namespace": "records",
+    "doc": "This is an example \"schema\".",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string"
+        }
+    ]
+}

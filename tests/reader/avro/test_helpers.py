@@ -93,19 +93,40 @@ class AvroHelperTests(unittest.TestCase):
     def test_dedupe_imports(self):
         """ tests the dedupe_imports helper function works """
 
+        container = {'name': 'Test3', 'namespace': 'test3.namespace'}
+
         expected = [
             Reference(**{'name': 'Test', 'namespace': 'test.namespace'}),
             Reference(**{'name': 'Test2', 'namespace': 'test2.namespace'})
         ]
 
+        expected_omitted = [
+            Reference(**{'name': 'Test', 'namespace': 'test.namespace2'}),
+            Reference(**{'name': 'Test2', 'namespace': 'test2.namespace2'}),
+            Reference(**{'name': 'Test2', 'namespace': 'test2.namespace3'}),
+            Reference(**{'name': 'Test3', 'namespace': 'test3.namespace2'})
+        ]
+
         has_dupes = [
             Reference(**{'name': 'Test', 'namespace': 'test.namespace'}),
             Reference(**{'name': 'Test', 'namespace': 'test.namespace'}),
+            Reference(**{'name': 'Test', 'namespace': 'test.namespace2'}),
             Reference(**{'name': 'Test2', 'namespace': 'test2.namespace'}),
-            Reference(**{'name': 'Test2', 'namespace': 'test2.namespace'})
+            Reference(**{'name': 'Test2', 'namespace': 'test2.namespace'}),
+            Reference(**{'name': 'Test2', 'namespace': 'test2.namespace2'}),
+            Reference(**{'name': 'Test2', 'namespace': 'test2.namespace3'}),
+            Reference(**{'name': 'Test3', 'namespace': 'test3.namespace'}),
+            Reference(**{'name': 'Test3', 'namespace': 'test3.namespace2'})
         ]
+
+        (result, result_omitted) = dedupe_imports(has_dupes, owner=container)
 
         self.assertEqual(
             expected,
-            dedupe_imports(has_dupes)
+            result
+        )
+
+        self.assertEqual(
+            expected_omitted,
+            result_omitted
         )

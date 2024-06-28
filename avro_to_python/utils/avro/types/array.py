@@ -64,8 +64,11 @@ def _array_field(field: dict,
 
     # handle complex types
     elif field_item_type in ['record', 'enum', 'map', 'array', 'union']:
+        field_item_namespace = field['type'].get('namespace')
+
         if field_item_type == 'record':
             _func = _record_field
+            field_item_namespace = field['type']['items'].get('namespace')
         elif field_item_type == 'enum':
             _func = _enum_field
         elif field_item_type == 'map':
@@ -86,7 +89,7 @@ def _array_field(field: dict,
         kwargs.update({'array_item_type': _func(
             field={'name': 'arrayfield',
                    'type': field['type']['items'],
-                   'namespace': field['type'].get('namespace')},
+                   'namespace': field_item_namespace},
             parent_namespace=parent_namespace,
             queue=queue, references=references)})
 

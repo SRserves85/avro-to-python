@@ -1,0 +1,53 @@
+{
+    "type": "record",
+    "name": "RecordWithCircularReference",
+    "namespace": "records",
+    "fields": [
+        {
+            "name": "tree",
+            "type": {
+                "type": "record",
+                "name": "Node",
+                "fields": [
+                    {
+                        "name": "id",
+                        "type": "string"
+                    },
+                    {
+                        "name": "parent",
+                        "type": [
+                            "null",
+                            "Node"
+                        ],
+                        "default": null
+                    },
+                    {
+                        "name": "children",
+                        "type": [
+                            "null",
+                            {
+                                "type": "array",
+                                "items": "Node"
+                            }
+                        ],
+                        "default": null
+                    }
+                ]
+            }
+        },
+        {
+            "name": "altTree",
+            "type": {
+                "type": "record",
+                "name": "Node",
+                "namespace": "records.nested",
+                "fields": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ]
+}

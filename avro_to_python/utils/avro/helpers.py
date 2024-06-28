@@ -9,7 +9,7 @@ from avro_to_python.utils.exceptions import BadReferenceError
 from avro_to_python.utils.avro.primitive_types import PRIMITIVE_TYPE_MAP
 
 
-def _create_reference(file: dict) -> dict:
+def _create_reference(file: dict) -> Reference:
     """ creates a reference object for file references
 
     Parameters
@@ -19,10 +19,10 @@ def _create_reference(file: dict) -> dict:
 
     Returns
     -------
-        reference: dict
+        reference: Reference
             object containing reference information
     """
-    if any([('name' not in file), ('namespace') not in file]):
+    if any([('name' not in file), 'namespace' not in file]):
         raise BadReferenceError
 
     return Reference(
@@ -55,7 +55,8 @@ def _get_name(obj: dict) -> str:
         return name
     return obj['name']
 
-def _get_namespace(obj: dict, parent_namespace: str=None) -> str:
+
+def _get_namespace(obj: dict, parent_namespace: str = None) -> str:
     """ imputes the namespace if it doesn't already exist
 
     Namespaces follow the following chain of logic:
@@ -93,7 +94,8 @@ def _get_namespace(obj: dict, parent_namespace: str=None) -> str:
 
 def get_union_types(
     field: Field,
-    PRIMITIVE_TYPE_MAP: dict=PRIMITIVE_TYPE_MAP
+    primitive_type_map: dict = PRIMITIVE_TYPE_MAP,
+    container: object = None
 ) -> str:
     """ Takes a field object and returns the types of the fields
 
@@ -101,7 +103,7 @@ def get_union_types(
     ----------
         field: dict
             dictionary resembling a field for a union type
-        PRIMITIVE_TYPE_MAP: dict
+        primitive_type_map: dict
             lookup table mapping avro types to python types
 
     Returns
@@ -116,11 +118,20 @@ def get_union_types(
 
         # primitive type
         if obj.fieldtype == 'primitive':
-            out_types.append(PRIMITIVE_TYPE_MAP.get(obj.avrotype))
+            out_types.append(primitive_type_map.get(obj.avrotype))
 
         # reference to a named type
         elif obj.fieldtype == 'reference':
-            out_types.append(obj.reference_name)
+            ref_name = obj.reference_name
+            if container and container.name == obj.reference_name:
+                if container.namespace == obj.reference_namespace:
+                    # We must quote reference name as this is a circular reference
+                    ref_name = (f"'{ref_name}'")
+                elif obj.reference_namespace:
+                    # Reference has same name but belongs to a different (non empty) package. We
+                    # must indicate full path
+                    ref_name = (f"'{obj.reference_namespace}.{ref_name}'")
+            out_types.append(ref_name)
 
         elif obj.fieldtype == 'array':
             out_types.append('list')
@@ -133,9 +144,10 @@ def get_union_types(
 
     return ','.join(out_types)
 
+
 def get_not_null_primitive_type_in_union(
     field: Field,
-    PRIMITIVE_TYPE_MAP: dict=PRIMITIVE_TYPE_MAP
+    primitive_type_map: dict = PRIMITIVE_TYPE_MAP
 ) -> str:
     """ Takes a field object and returns the not null primitive type if any
 
@@ -143,7 +155,7 @@ def get_not_null_primitive_type_in_union(
     ----------
         field: dict
             dictionary resembling a field for a union type
-        PRIMITIVE_TYPE_MAP: dict
+        primitive_type_map: dict
             lookup table mapping avro types to python types
 
     Returns
@@ -156,28 +168,45 @@ def get_not_null_primitive_type_in_union(
 
         # primitive type
         if obj.fieldtype == 'primitive' and obj.avrotype != 'null':
-            return PRIMITIVE_TYPE_MAP.get(obj.avrotype)
+            return primitive_type_map.get(obj.avrotype)
 
     return ''
 
 
-def dedupe_imports(imports: List[Reference]) -> None:
-    """ Dedupes list of imports
+def dedupe_imports(imports: List[Reference], owner: dict = None) -> (list, list):
+    """ De-dupes list of imports
 
     Parameters
     ----------
+        owner: owner reference of the imports to deduplicate
         imports: list of dict
             list of imports of a file
 
     Returns
     -------
-        None
+        (list, list): first list contains the imports to render and the second those omitted due
+            to name clashing (same class name in different package)
     """
     hashmap = {}
+    hashmap_omitted = {}
     for i, obj in enumerate(imports):
-        hashmap[obj.name + obj.namespace] = obj
+        if owner and obj.name == owner["name"]:
+            # We have to leave out objects with same name
+            # This applies to:
+            #   + Circular references: The namespace will also match. We must avoid importing same file we are in. For
+            #                          the reference name must be enclosed in single quotes
+            #   + Same name from other namespace: We also avoid importing these references, and we must specify whole
+            #                                     name (namespace + name) when reference is used
+            if obj.namespace != owner["namespace"]:
+                # Circular reference
+                hashmap_omitted[f"'{obj.namespace}.{obj.name}'"] = obj
+        elif obj.name in hashmap and hashmap[obj.name].namespace != obj.namespace:
+            # Name clash. Same name already imported but belonging to other namespace
+            hashmap_omitted[f"'{obj.namespace}.{obj.name}'"] = obj
+        else:
+            hashmap[obj.name] = obj
 
-    return list(hashmap.values())
+    return (list(hashmap.values()), list(hashmap_omitted.values()))
 
 
 def split_namespace(s: str) -> Tuple[str, str]:
@@ -197,4 +226,4 @@ def split_namespace(s: str) -> Tuple[str, str]:
     split = s.split('.')
     name = split.pop()
     namespace = '.'.join(split)
-    return (namespace, name)
+    return namespace, name

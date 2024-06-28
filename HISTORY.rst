@@ -5,12 +5,21 @@ History
 0.3.4 (Future)
 ^^^^^^^^^^^^^^^^^^
 
-* Fix primitive type with metadata handling.
-* Fix multi-dimensional array handling.
-* Allow empty constructor in generated objects.
+* Fix primitive type with metadata handling
+* Fix multi-dimensional array handling
+* Allow empty constructor in generated objects
 * Support encoding bytes in JSON as base64 string.
 * Added encoding option for source and target files.
 * Support arrays with union item types.
+* Improved enum support (in unions and type references)
+* Added support for GeoJSON format
+* Improved number parsing
+* Added support for circular references and class name clashes
+* Maps are treated now as dictionaries, not lists
+* Fix map of array of primitive handling
+* Escape chars are no longer lost in embedded AVRO schema
+* Mandatory record fields are now checked for a value
+* Embedded schema now matches original one
 
 0.3.3 (2022-01-26)
 ^^^^^^^^^^^^^^^^^^

@@ -100,4 +100,4 @@ def _record_file(file: File, item: dict, queue: List[dict]) -> None:
         file.fields[field.name] = field
         file.imports += references
 
-    file.imports = dedupe_imports(file.imports)
+    (file.imports, file.aliased_imports) = dedupe_imports(file.imports, {'name': file.name, 'namespace': file.namespace})

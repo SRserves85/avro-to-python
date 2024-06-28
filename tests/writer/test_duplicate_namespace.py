@@ -1,4 +1,3 @@
-import json
 import os
 import shutil
 import sys
@@ -20,11 +19,15 @@ class PathTests(unittest.TestCase):
         writer = AvroWriter(reader.file_tree)
 
         self.write_path = os.path.abspath(
-            self.source.replace(get_joined_path('tests', 'avsc', 'namespace_duplicate_test'), '')
+            self.source.replace(get_joined_path('tests', 'avsc', 'namespace_duplicate_test', '2'),
+                                '') + "/compiled"
         )
 
         writer.write(root_dir=self.write_path)
         sys.path.append(self.write_path)
+
+    def tearDown(self):
+        shutil.rmtree(self.write_path)
 
     def test_namespace_duplicate(self):
         if os.path.isdir("tests/avsc/namespace_duplicate_test/test/"):
@@ -44,7 +47,8 @@ class PathTests(unittest.TestCase):
             os.path.isfile("tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/unique/Common.py")
         )
         self.assertTrue(
-            os.path.isfile("tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/common/enums/CommonEnum.py")
+            os.path.isfile(
+                "tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/common/enums/CommonEnum.py")
         )
         self.assertTrue(
             os.path.isfile("tests/avsc/namespace_duplicate_test/test/namespace_duplicate_test/unique/UniqueEnum.py")

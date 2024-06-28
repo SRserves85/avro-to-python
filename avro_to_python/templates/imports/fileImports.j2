@@ -4,4 +4,9 @@
 from {{pip_import}}{{imp.namespace}}.{{imp.name}} import {{imp.name}}
 {% endfor -%}
 {%- endif -%}
+{%- if file.aliased_imports %}
+{%- for imp in file.aliased_imports -%}
+from {{pip_import}}{{imp.namespace}}.{{imp.name}} import {{imp.name}} as {{pip_import.replace(".", "_")}}{{imp.namespace.replace(".", "_")}}_{{imp.name}}
+{% endfor -%}
+{%- endif -%}
 {% endblock %}

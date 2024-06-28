@@ -1,0 +1,52 @@
+{
+    "type": "record",
+    "name": "RecordWithNumbers",
+    "namespace": "records",
+    "fields": [
+        {
+            "name": "booleanValue",
+            "type": "boolean"
+        },
+        {
+            "name": "nullableBooleanValue",
+            "type": ["null", "boolean" ],
+            "default": null
+        },
+        {
+            "name": "intValue",
+            "type": "int"
+        },
+        {
+            "name": "nullableIntValue",
+            "type": ["null", "int" ],
+            "default": null
+        },
+        {
+            "name": "longValue",
+            "type": "long"
+        },
+        {
+            "name": "nullableLongValue",
+            "type": ["null", "long" ],
+            "default": null
+        },
+        {
+            "name": "floatValue",
+            "type": "float"
+        },
+        {
+            "name": "nullableFloatValue",
+            "type": ["null", "float" ],
+            "default": null
+        },
+        {
+            "name": "doubleValue",
+            "type": "double"
+        },
+        {
+            "name": "nullableDoubleValue",
+            "type": ["null", "double" ],
+            "default": null
+        }
+    ]
+}
