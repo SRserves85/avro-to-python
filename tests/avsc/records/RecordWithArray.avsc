@@ -1,62 +1,72 @@
 {
-  "type" : "record",
-  "name" : "RecordWithArray",
-  "namespace" : "records",
-  "fields" : [ {
-    "name" : "things",
-    "type" : {
-      "type" : "array",
-      "items" : {
-        "type" : "record",
-        "name" : "Thing",
-        "fields" : [ {
-          "name" : "id",
-          "type" : "int"
-        } ]
-      }
-    }
-  }, {
-    "name" : "numbers",
-    "type" : {
-      "type" : "array",
-      "items" : "int"
-    }
-  }, {
-    "name": "things2",
-    "type": {
-      "type": "array",
-      "items": {
-        "type": "Thing"
-      }
-    }
-  }, {
-    "name": "twoDimDoubleArray",
-    "type": {
-      "type": "array",
-      "items" : {
-        "type" : "array",
-        "items" : "double",
-        "java-class" : "[D"
-      },
-      "java-class" : "[[D"
-    }
-  }, {
-    "name": "threeDimRecordArray",
-    "type": {
-      "type": "array",
-      "items" : {
-        "type" : "array",
-        "items" : {
-          "type" : "array",
-          "items" : "Thing"
+    "type": "record",
+    "name": "RecordWithArray",
+    "namespace": "records",
+    "fields": [
+        {
+            "name": "things",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "record",
+                    "name": "Thing",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "int"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "numbers",
+            "type": {
+                "type": "array",
+                "items": "int"
+            }
+        },
+        {
+            "name": "things2",
+            "type": {
+                "type": "array",
+                "items": "Thing"
+            }
+        },
+        {
+            "name": "twoDimDoubleArray",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "array",
+                    "items": "double",
+                    "java-class": "[D"
+                },
+                "java-class": "[[D"
+            }
+        },
+        {
+            "name": "threeDimRecordArray",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": "Thing"
+                    }
+                }
+            }
+        },
+        {
+            "name": "arrayOfUnion",
+            "type": {
+                "type": "array",
+                "items": [
+                    "Thing",
+                    "int"
+                ]
+            }
         }
-      }
-    }
-  }, {
-    "name": "arrayOfUnion",
-    "type": {
-      "type": "array",
-      "items" : [ "Thing", "int" ]
-    }
-  } ]
+    ]
 }

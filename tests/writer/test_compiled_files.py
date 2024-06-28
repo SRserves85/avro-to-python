@@ -1,7 +1,9 @@
 """ tests for the reader and reader utils """
-
+import glob
+import importlib
 import json
 import os
+import pathlib
 import shutil
 import sys
 import unittest
@@ -28,6 +30,21 @@ class PathTests(unittest.TestCase):
 
         writer.write(root_dir=self.write_path)
         sys.path.append(self.write_path)
+
+        self.check_generated_schemas()
+
+    def check_generated_schemas(self):
+        """ Verify that embedded AVRO schema matches original one """
+        avsc_files = glob.glob(get_joined_path(self.source, "*.avsc"))
+
+        for avsc_file in avsc_files:
+            classname = pathlib.Path(avsc_file).stem
+            module = importlib.import_module("records")
+            clazz = getattr(module, classname)
+            with open(avsc_file, 'r') as f:
+                orig_schema = json.load(f)
+            generated_schema = json.loads(clazz.schema)
+            self.assertEqual(generated_schema, orig_schema, f"Schema mismatch for class: {classname}")
 
     def tearDown(self):
         """ remove all the compiled files"""

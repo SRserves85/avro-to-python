@@ -1,5 +1,5 @@
 """ base file class for avro file structure """
-
+import copy
 from typing import List, Union
 
 from avro_to_python.classes.field import Field
@@ -22,6 +22,7 @@ class File(object):
         self.avrotype = avrotype
         self.namespace = namespace
         self.schema = schema
+        self.orig_schema = copy.deepcopy(schema)
         self.imports = imports
         self.aliased_imports = []
         self.fields = fields
